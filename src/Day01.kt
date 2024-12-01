@@ -1,15 +1,16 @@
 import kotlin.math.abs
 
-fun part1(input: List<String>): Int {
-    val (list1, list2) = input.map { it.split(" ").filter { it.isNotEmpty() }.map(String::toInt) }
+fun List<String>.splitIntoTwoLists() =
+    this.map { it.split(" ").filter { it.isNotEmpty() }.map(String::toInt) }
         .fold(mutableListOf<Int>() to mutableListOf<Int>()) { acc, pair ->
             acc.also { (list1, list2) -> list1 += pair[0]; list2 += pair[1] }
         }
-    return (list1.sorted() zip list2.sorted()).sumOf { (v1, v2) -> abs(v1 - v2) }
-}
 
-fun part2(input: List<String>): Int {
-    return input.size * 2
+fun part1(list1: List<Int>, list2: List<Int>) =
+    (list1.sorted() zip list2.sorted()).sumOf { (v1, v2) -> abs(v1 - v2) }
+
+fun part2(list1: List<Int>, list2: List<Int>): Long {
+    return -1
 }
 
 fun main() {
@@ -17,7 +18,7 @@ fun main() {
      * Input: Day01_test01
      */
     run {
-        val input = readInput("Day01_test01")
+        val (list1, list2) = readInput("Day01_test01").splitIntoTwoLists()
 
         /**
          * Part 1
@@ -25,7 +26,7 @@ fun main() {
          */
         run {
             val expected = 11
-            val actual = part1(input)
+            val actual = part1(list1, list2)
             assertEquals(expected, actual)
         }
 
@@ -35,7 +36,7 @@ fun main() {
          */
         run {
             val expected = 2
-            val actual = part2(input)
+            val actual = part2(list1, list2)
             assertEquals(expected, actual)
         }
     }
@@ -44,8 +45,8 @@ fun main() {
      * Input: Day01
      */
     run {
-        val input = readInput("Day01")
-        part1(input).println()
-        part2(input).println()
+        val (list1, list2) = readInput("Day01").splitIntoTwoLists()
+        part1(list1, list2).println()
+        part2(list1, list2).println()
     }
 }
