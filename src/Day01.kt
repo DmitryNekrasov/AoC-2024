@@ -1,5 +1,11 @@
+import kotlin.math.abs
+
 fun part1(input: List<String>): Int {
-    return input.size
+    val (list1, list2) = input.map { it.split(" ").filter { it.isNotEmpty() }.map(String::toInt) }
+        .fold(mutableListOf<Int>() to mutableListOf<Int>()) { acc, pair ->
+            acc.also { (list1, list2) -> list1 += pair[0]; list2 += pair[1] }
+        }
+    return (list1.sorted() zip list2.sorted()).sumOf { (v1, v2) -> abs(v1 - v2) }
 }
 
 fun part2(input: List<String>): Int {
@@ -15,10 +21,10 @@ fun main() {
 
         /**
          * Part 1
-         * Output: 1
+         * Output: 11
          */
         run {
-            val expected = 1
+            val expected = 11
             val actual = part1(input)
             assertEquals(expected, actual)
         }
