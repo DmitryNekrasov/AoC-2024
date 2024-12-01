@@ -1,3 +1,8 @@
+package day01
+
+import assertEquals
+import println
+import readInput
 import kotlin.math.abs
 
 fun List<String>.splitIntoTwoLists() =
