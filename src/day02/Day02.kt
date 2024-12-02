@@ -3,13 +3,21 @@ package day02
 import assertEquals
 import println
 import readInput
+import kotlin.math.abs
 
 fun List<String>.toMatrix() = this.map { it.split(" ").map(String::toInt) }
 
 fun part1(input: List<List<Int>>): Int {
-    println(input)
-
-    return input.size
+    fun List<Int>.isSafe(): Boolean {
+        val compare = this[0] compareTo this[1]
+        for (i in 1..lastIndex) {
+            if ((this[i - 1] compareTo this[i]) != compare || abs(this[i - 1] - this[i]) > 3) {
+                return false
+            }
+        }
+        return true
+    }
+    return input.count { it.isSafe() }
 }
 
 fun part2(input: List<List<Int>>): Int {
