@@ -4,35 +4,28 @@ import assertEquals
 import println
 import readInput
 
-fun part1(input: List<String>): Int {
+fun List<String>.toMatrix() = this.map { it.split(" ").map(String::toInt) }
+
+fun part1(input: List<List<Int>>): Int {
+    println(input)
+
     return input.size
 }
 
-fun part2(input: List<String>): Int {
+fun part2(input: List<List<Int>>): Int {
     return input.size
 }
 
 fun main() {
-    /**
-     * Input: Day02_test01
-     */
     run {
-        val input = readInput("Day02_test01")
+        val input = readInput("Day02_test01").toMatrix()
 
-        /**
-         * Part 1
-         * Output: -1
-         */
         run {
-            val expected = -1
+            val expected = 2
             val actual = part1(input)
             assertEquals(expected, actual)
         }
 
-        /**
-         * Part 2
-         * Output: -1
-         */
         run {
             val expected = -1
             val actual = part2(input)
@@ -44,7 +37,7 @@ fun main() {
      * Input: Day02
      */
     run {
-        val input = readInput("Day02")
+        val input = readInput("Day02").toMatrix()
         part1(input).println()
         part2(input).println()
     }
