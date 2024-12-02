@@ -41,9 +41,6 @@ fun main() {
         }
     }
 
-    /**
-     * Input: Day02
-     */
     run {
         val input = readInput("Day02").toMatrix()
         part1(input).println()
