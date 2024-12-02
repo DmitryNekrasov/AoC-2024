@@ -10,6 +10,7 @@ fun List<String>.toMatrix() = this.map { it.split(" ").map(String::toInt) }
 fun part1(input: List<List<Int>>): Int {
     fun List<Int>.isSafe(): Boolean {
         val compare = this[0] compareTo this[1]
+        if (compare == 0) return false
         for (i in 1..lastIndex) {
             if (this[i - 1] compareTo this[i] != compare || abs(this[i - 1] - this[i]) > 3) {
                 return false
@@ -28,6 +29,7 @@ fun part2(input: List<List<Int>>): Int {
             1 -> this[0] compareTo this[2]
             else -> this[0] compareTo this[1]
         }
+        if (compare == 0) return false
         var prev = if (ignoreIndex == 0) this[1] else this[0]
         for (i in (if (ignoreIndex > 2) 1 else 2)..lastIndex) {
             if (i == ignoreIndex) continue
