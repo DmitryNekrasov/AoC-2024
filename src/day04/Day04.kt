@@ -42,8 +42,26 @@ fun part1(input: List<String>): Int {
     return result
 }
 
+const val pattern = "MMSSMMS"
+
 fun part2(input: List<String>): Int {
-    return input.size
+    val n = input.size
+    val m = input.first().length
+
+    var result = 0
+    for (i in 1..<(n - 1)) {
+        for (j in 1..<(m - 1)) {
+            if (input[i][j] == 'A') {
+                val sb = StringBuilder()
+                for ((di, dj) in listOf(-1 to -1, -1 to 1, 1 to 1, 1 to -1)) {
+                    sb.append(input[i + di][j + dj])
+                }
+                result += if (sb.toString() in pattern) 1 else 0
+            }
+        }
+    }
+
+    return result
 }
 
 fun main() {
