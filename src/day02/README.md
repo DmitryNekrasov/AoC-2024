@@ -1,3 +1,5 @@
+# Day 2: Red-Nosed Reports
+
 ## Intuition
 
 The problem essentially asks us to validate sequences of numbers based on two main criteria. In Part 1, we're looking for strictly monotonic sequences (either increasing or decreasing) where adjacent numbers differ by 1-3. In Part 2, we add flexibility by allowing one number to be removed to achieve this pattern.
