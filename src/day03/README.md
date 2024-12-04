@@ -1,3 +1,5 @@
+# Day 3: Mull It Over
+
 ## Intuition
 
 This problem is fundamentally about parsing text according to specific patterns while handling corrupted data. The core challenges are:
