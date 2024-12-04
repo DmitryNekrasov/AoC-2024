@@ -1,3 +1,5 @@
+# Day 1: Historian Hysteria
+
 ## Intuition
 
 The puzzle presents two lists of numbers that need to be compared in different ways:
