@@ -11,10 +11,9 @@ fun part1(input: List<String>): Int {
     val m = input.first().length
 
     fun generateDirections(): List<Pair<Int, Int>> {
-        val steps = listOf(-1, 0, 1)
         val directions = mutableListOf<Pair<Int, Int>>()
-        for (di in steps) {
-            for (dj in steps) {
+        for (di in -1..1) {
+            for (dj in -1..1) {
                 if (di != 0 || dj != 0) {
                     directions.add(di to dj)
                 }
