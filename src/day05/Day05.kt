@@ -35,10 +35,7 @@ fun part1(sequences: List<List<Int>>): Int {
 }
 
 fun part2(rules: Set<Pair<Int, Int>>, incorrect: List<List<Int>>): Int {
-    println("rules = $rules")
-    println("incorrect = $incorrect")
-
-    return rules.size
+    return incorrect.sumOf { sequence -> sequence.sortedWith { o1, o2 -> if (o1 to o2 in rules) -1 else 1 }[sequence.size / 2] }
 }
 
 fun main() {
