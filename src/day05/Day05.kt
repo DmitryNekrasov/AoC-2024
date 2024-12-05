@@ -22,7 +22,28 @@ fun List<String>.parse(): Pair<HashMap<Int, MutableList<Int>>, List<List<Int>>> 
 }
 
 fun part1(graph: HashMap<Int, MutableList<Int>>, sequences: List<List<Int>>): Int {
-    return graph.size
+    fun doesThePathExist(from: Int, to: Int): Boolean {
+        val visited = HashSet<Int>()
+
+        fun dfs(from: Int) {
+            visited += from
+            graph[from]?.also { neighbors ->
+                for (to in neighbors) {
+                    if (to !in visited) {
+                        dfs(to)
+                    }
+                }
+            }
+        }
+
+        dfs(from)
+
+        return to in visited
+    }
+
+    return sequences.sumOf { sequence ->
+        if (sequence.zipWithNext().any { (from, to) -> doesThePathExist(to, from) }) 0 else sequence[sequence.size / 2]
+    }
 }
 
 fun part2(graph: HashMap<Int, MutableList<Int>>, sequences: List<List<Int>>): Int {
@@ -32,11 +53,11 @@ fun part2(graph: HashMap<Int, MutableList<Int>>, sequences: List<List<Int>>): In
 fun main() {
     run {
         val (graph, sequences) = readInput("Day05_test01").parse()
-        println(graph)
-        println(sequences)
+        println("graph = $graph")
+        println("sequences = $sequences")
 
         run {
-            val expected = -1
+            val expected = 143
             val actual = part1(graph, sequences)
             assertEquals(expected, actual)
         }
@@ -50,8 +71,9 @@ fun main() {
 
     run {
         val (graph, sequences) = readInput("Day05").parse()
-        println(graph)
-        println(sequences)
+        println("graph = $graph")
+        println("sequences = $sequences")
+
         part1(graph, sequences).println()
         part2(graph, sequences).println()
     }
