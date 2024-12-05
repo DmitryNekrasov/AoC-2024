@@ -4,77 +4,51 @@ import assertEquals
 import println
 import readInput
 
-fun List<String>.parse(): Pair<HashMap<Int, MutableList<Int>>, List<List<Int>>> {
-    fun List<String>.parseGraph(): HashMap<Int, MutableList<Int>> {
-        val graph = HashMap<Int, MutableList<Int>>()
-        for ((from, to) in this.map { it.split("|").map(String::toInt) }) {
-            graph.getOrPut(from) { mutableListOf() } += to
-        }
-        return graph
-    }
+fun List<String>.parse(): Pair<Set<Pair<Int, Int>>, List<List<Int>>> {
+    fun List<String>.parseRules() =
+        this.map { it.split("|").map(String::toInt) }.map { (from, to) -> from to to }.toSet()
 
     fun List<String>.parseSequences() = this.map { it.split(",").map(String::toInt) }
 
     val (pageOrdering, updateString) = this.indexOf("")
         .let { index -> this.slice(0..<index) to this.slice((index + 1)..this.lastIndex) }
 
-    return pageOrdering.parseGraph() to updateString.parseSequences()
+    return pageOrdering.parseRules() to updateString.parseSequences()
 }
 
-fun part1(graph: HashMap<Int, MutableList<Int>>, sequences: List<List<Int>>): Int {
-    fun doesThePathExist(from: Int, to: Int): Boolean {
-        val visited = HashSet<Int>()
-
-        fun dfs(from: Int) {
-            visited += from
-            graph[from]?.also { neighbors ->
-                for (to in neighbors) {
-                    if (to !in visited) {
-                        dfs(to)
-                    }
-                }
-            }
-        }
-
-        dfs(from)
-
-        return to in visited
-    }
-
-    return sequences.sumOf { sequence ->
-        if (sequence.zipWithNext().any { (from, to) -> doesThePathExist(to, from) }) 0 else sequence[sequence.size / 2]
-    }
+fun part1(rules: Set<Pair<Int, Int>>, sequences: List<List<Int>>): Int {
+    return rules.size
 }
 
-fun part2(graph: HashMap<Int, MutableList<Int>>, sequences: List<List<Int>>): Int {
-    return graph.size
+fun part2(rules: Set<Pair<Int, Int>>, sequences: List<List<Int>>): Int {
+    return rules.size
 }
 
 fun main() {
     run {
-        val (graph, sequences) = readInput("Day05_test01").parse()
-        println("graph = $graph")
+        val (rules, sequences) = readInput("Day05_test01").parse()
+        println("rules = $rules")
         println("sequences = $sequences")
 
         run {
             val expected = 143
-            val actual = part1(graph, sequences)
+            val actual = part1(rules, sequences)
             assertEquals(expected, actual)
         }
 
         run {
             val expected = -1
-            val actual = part2(graph, sequences)
+            val actual = part2(rules, sequences)
             assertEquals(expected, actual)
         }
     }
 
     run {
-        val (graph, sequences) = readInput("Day05").parse()
-        println("graph = $graph")
+        val (rules, sequences) = readInput("Day05").parse()
+        println("rules = $rules")
         println("sequences = $sequences")
 
-        part1(graph, sequences).println()
-        part2(graph, sequences).println()
+        part1(rules, sequences).println()
+        part2(rules, sequences).println()
     }
 }
