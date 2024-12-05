@@ -17,7 +17,24 @@ fun List<String>.parse(): Pair<Set<Pair<Int, Int>>, List<List<Int>>> {
 }
 
 fun part1(rules: Set<Pair<Int, Int>>, sequences: List<List<Int>>): Int {
-    return rules.size
+    var result = 0
+    for (sequence in sequences) {
+        var isCorrect = true
+        for (i in 0..<sequence.lastIndex) {
+            val from = sequence[i]
+            for (j in (i + 1)..sequence.lastIndex) {
+                val to = sequence[j]
+                if (from to to !in rules) {
+                    isCorrect = false
+                }
+            }
+        }
+        if (isCorrect) {
+            result += sequence[sequence.size / 2]
+        }
+    }
+
+    return result
 }
 
 fun part2(rules: Set<Pair<Int, Int>>, sequences: List<List<Int>>): Int {
