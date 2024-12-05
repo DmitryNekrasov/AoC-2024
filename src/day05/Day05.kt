@@ -33,7 +33,6 @@ fun part1(rules: Set<Pair<Int, Int>>, sequences: List<List<Int>>): Int {
             result += sequence[sequence.size / 2]
         }
     }
-
     return result
 }
 
