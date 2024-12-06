@@ -16,12 +16,38 @@ val List<String>.start: Pair<Int, Int>
         throw RuntimeException("Should not reach here")
     }
 
+val d = listOf(-1 to 0, 0 to 1, 1 to 0, 0 to -1)
+
+const val VISITED = '&'
+
+fun List<CharArray>.traverse(startI: Int, startJ: Int) {
+    val n = size
+    val m = first().size
+    var i = startI
+    var j = startJ
+    var currentDirection = 0
+    do {
+        this[i][j] = VISITED
+        val (di, dj) = d[currentDirection]
+        if (i + di !in 0..<n || j + dj !in 0..<m) return
+        if (this[i + di][j + dj] == '#') {
+            currentDirection = (currentDirection + 1) % d.size
+        } else {
+            i += di
+            j += dj
+        }
+    } while (true)
+}
+
+fun List<CharArray>.print() {
+    println(joinToString("\n") { String(it) })
+}
+
 fun part1(map: List<String>): Int {
     val (startI, startJ) = map.start
-    println("start = ($startI, $startJ)")
-
-
-    return map.size
+    val a = map.map(String::toCharArray)
+    a.traverse(startI, startJ)
+    return a.sumOf { it.count{ it == VISITED } }
 }
 
 fun part2(input: List<String>): Int {
