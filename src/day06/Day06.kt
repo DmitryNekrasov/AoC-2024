@@ -4,8 +4,24 @@ import assertEquals
 import println
 import readInput
 
-fun part1(input: List<String>): Int {
-    return input.size
+val List<String>.start: Pair<Int, Int>
+    get() = run {
+        for (i in 0..lastIndex) {
+            for (j in 0..this.first().lastIndex) {
+                if (this[i][j] == '^') {
+                    return@run i to j
+                }
+            }
+        }
+        throw RuntimeException("Should not reach here")
+    }
+
+fun part1(map: List<String>): Int {
+    val (startI, startJ) = map.start
+    println("start = ($startI, $startJ)")
+
+
+    return map.size
 }
 
 fun part2(input: List<String>): Int {
