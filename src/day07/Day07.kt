@@ -10,12 +10,12 @@ fun String.parseLine(): Pair<BigInteger, List<BigInteger>> {
     return BigInteger(target) to values.trim().split(" ").map { BigInteger(it) }
 }
 
-fun check(target: BigInteger, values: List<BigInteger>, current: BigInteger = values.first(), index: Int = 1): Boolean {
-    if (index == values.size) return current == target
-    return check(target, values, current + values[index], index + 1) || check(target, values, current * values[index], index + 1)
-}
-
 fun part1(input: List<String>): BigInteger {
+    fun check(target: BigInteger, values: List<BigInteger>, current: BigInteger = values.first(), index: Int = 1): Boolean {
+        if (index == values.size) return current == target
+        return check(target, values, current + values[index], index + 1) || check(target, values, current * values[index], index + 1)
+    }
+
     return input.map(String::parseLine).filter { (target, values) -> check(target, values) }.sumOf { it.first }
 }
 
