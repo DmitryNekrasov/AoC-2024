@@ -3,15 +3,14 @@ package day07
 import assertEquals
 import println
 import readInput
-import java.math.BigInteger
 
-fun String.parseLine(): Pair<BigInteger, List<BigInteger>> {
+fun String.parseLine(): Pair<Long, List<Long>> {
     val (target, values) = split(":")
-    return BigInteger(target) to values.trim().split(" ").map { BigInteger(it) }
+    return target.toLong() to values.trim().split(" ").map { it.toLong() }
 }
 
-fun part1(input: List<String>): BigInteger {
-    fun check(target: BigInteger, values: List<BigInteger>, current: BigInteger = values.first(), index: Int = 1): Boolean {
+fun part1(input: List<String>): Long {
+    fun check(target: Long, values: List<Long>, current: Long = values.first(), index: Int = 1): Boolean {
         if (index == values.size) return current == target
         return check(target, values, current + values[index], index + 1) || check(target, values, current * values[index], index + 1)
     }
@@ -19,7 +18,7 @@ fun part1(input: List<String>): BigInteger {
     return input.map(String::parseLine).filter { (target, values) -> check(target, values) }.sumOf { it.first }
 }
 
-fun part2(input: List<String>): BigInteger {
+fun part2(input: List<String>): Long {
     val cache = HashMap<Int, List<List<Char>>>()
 
     fun generateOperators(n: Int, current: MutableList<Char> = mutableListOf()): List<List<Char>> {
@@ -41,9 +40,9 @@ fun part2(input: List<String>): BigInteger {
         return result
     }
 
-    infix fun BigInteger.concat(other: BigInteger) = BigInteger("${this}${other}")
+    infix fun Long.concat(other: Long) = "${this}${other}".toLong()
 
-    fun perform(values: List<BigInteger>, operators: List<Char>): BigInteger {
+    fun perform(values: List<Long>, operators: List<Char>): Long {
         var result = values.first()
         for ((operator, value) in operators zip values.slice(1..values.lastIndex)) {
             when (operator) {
@@ -67,13 +66,13 @@ fun main() {
         val input = readInput("Day07_test01")
 
         run {
-            val expected = BigInteger.valueOf(3749)
+            val expected = 3749L
             val actual = part1(input)
             assertEquals(expected, actual)
         }
 
         run {
-            val expected = BigInteger.valueOf(11387)
+            val expected = 11387L
             val actual = part2(input)
             assertEquals(expected, actual)
         }
