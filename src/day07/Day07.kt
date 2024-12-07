@@ -34,7 +34,7 @@ fun main() {
         }
 
         run {
-            val expected = -1
+            val expected = BigInteger.valueOf(11387)
             val actual = part2(input)
             assertEquals(expected, actual)
         }
