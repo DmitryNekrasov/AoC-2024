@@ -68,12 +68,12 @@ Time Complexity: $$O(3^n * n)$$
 - Each position can have 3 possible operators (+, *, ||)
 - Total number of operator combinations = `3^(n-1)`
 - For each combination, we evaluate the expression which takes $$O(n)$$ time
-- Therefore total time is $$O(3^(n-1) * n)$$ ≈ $$O(3^n * n)$$
+- Therefore total time is `O(3^(n-1) * n)` ≈ $$O(3^n * n)$$
 
 Space Complexity: $$O(3^n * n)$$
 - The cache stores all possible operator combinations:
     * For length `n-1`, we store `3^(n-1)` combinations
     * Each combination is of length `n-1`
-    * Total space for cache = $$O(3^(n-1) * (n-1))$$
+    * Total space for cache = `O(3^(n-1) * (n-1))`
 - The evaluation process uses $$O(n)$$ additional space
 - Therefore total space is $$O(3^n * n)$$
