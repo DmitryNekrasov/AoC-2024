@@ -81,4 +81,4 @@ For both parts:
 
 Overall:
 - Part 1: $$O(N * M + F * K^2)$$ where F is number of frequencies, K is max antennas per frequency
-- Part 2: $$O(N * M + F × K^2 × max(N, M))$$
+- Part 2: $$O(N * M + F * K^2 * max(N, M))$$
