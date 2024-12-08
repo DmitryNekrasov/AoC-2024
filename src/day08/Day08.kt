@@ -64,7 +64,7 @@ fun main() {
         }
 
         run {
-            val expected = -1
+            val expected = 34
             val actual = part2(input)
             assertEquals(expected, actual)
         }
