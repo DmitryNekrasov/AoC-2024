@@ -8,7 +8,7 @@ operator fun Pair<Int, Int>.minus(other: Pair<Int, Int>) = first - other.first t
 
 operator fun Pair<Int, Int>.plus(other: Pair<Int, Int>) = first + other.first to second + other.second
 
-fun part1(input: List<String>): Int {
+fun solve(input: List<String>, antinode: Pair<Int, Int>.(Pair<Int, Int>) -> List<Pair<Int, Int>>): Int {
     fun List<String>.getCoordinates(): Map<Char, List<Pair<Int, Int>>> {
         val result = HashMap<Char, MutableList<Pair<Int, Int>>>()
         for (i in indices) {
@@ -21,21 +21,11 @@ fun part1(input: List<String>): Int {
         return result
     }
 
-    infix fun Pair<Int, Int>.antinode(other: Pair<Int, Int>): List<Pair<Int, Int>> {
-        val diff = other - this
-        return listOf(this - diff, other + diff)
-    }
-
-    val n = input.size
-    val m = input.first().length
-
-    fun Pair<Int, Int>.inRange() = first in 0..<n && second in 0..<m
-
     fun List<Pair<Int, Int>>.calculateAntinodes(): List<Pair<Int, Int>> {
         val result = mutableListOf<Pair<Int, Int>>()
         for (i in 0..<lastIndex) {
             for (j in (i + 1)..lastIndex) {
-                result += (this[j] antinode this[i]).filter(Pair<Int, Int>::inRange)
+                result += this[j].antinode(this[i])
             }
         }
         return result
@@ -47,6 +37,17 @@ fun part1(input: List<String>): Int {
     }
 
     return antinodes.size
+}
+
+fun List<String>.inRange(p: Pair<Int, Int>) = p.first in 0..<size && p.second in 0..<first().length
+
+fun part1(input: List<String>): Int {
+    fun Pair<Int, Int>.antinode(other: Pair<Int, Int>): List<Pair<Int, Int>> {
+        val diff = other - this
+        return listOf(this - diff, other + diff).filter { input.inRange(it) }
+    }
+
+    return solve(input, Pair<Int, Int>::antinode)
 }
 
 fun part2(input: List<String>): Int {
