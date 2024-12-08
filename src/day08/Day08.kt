@@ -39,19 +39,35 @@ fun solve(input: List<String>, antinode: Pair<Int, Int>.(Pair<Int, Int>) -> List
     return antinodes.size
 }
 
-fun List<String>.inRange(p: Pair<Int, Int>) = p.first in 0..<size && p.second in 0..<first().length
+fun Pair<Int, Int>.inRange(grid: List<String>) = first in 0..<grid.size && second in 0..<grid.first().length
 
 fun part1(input: List<String>): Int {
     fun Pair<Int, Int>.antinode(other: Pair<Int, Int>): List<Pair<Int, Int>> {
         val diff = other - this
-        return listOf(this - diff, other + diff).filter { input.inRange(it) }
+        return listOf(this - diff, other + diff).filter { it.inRange(input) }
     }
 
     return solve(input, Pair<Int, Int>::antinode)
 }
 
 fun part2(input: List<String>): Int {
-    return input.size
+    fun Pair<Int, Int>.antinode(other: Pair<Int, Int>): List<Pair<Int, Int>> {
+        val result = mutableListOf<Pair<Int, Int>>()
+        val diff = other - this
+        var current = this
+        while (current.inRange(input)) {
+            result += current
+            current -= diff
+        }
+        current = other
+        while (current.inRange(input)) {
+            result += current
+            current += diff
+        }
+        return result
+    }
+
+    return solve(input, Pair<Int, Int>::antinode)
 }
 
 fun main() {
