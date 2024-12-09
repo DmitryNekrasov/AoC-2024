@@ -44,7 +44,6 @@ fun part2(input: String): Long {
     }
     var ptr = blocks.lastIndex
     while (ptr > 0) {
-//        println(blocks)
         var candidate = 1
         while (candidate < ptr) {
             if (blocks[candidate].last() >= blocks[ptr].last()) break
@@ -60,18 +59,6 @@ fun part2(input: String): Long {
         }
         ptr -= 2
     }
-
-//    00...111...2...333.44.5555.6666.777.888899
-//    0099.111...2...333.44.5555.6666.777.8888..
-//    0099.1117772...333.44.5555.6666.....8888..
-//    0099.111777244.333....5555.6666.....8888..
-//    00992111777.44.333....5555.6666.....8888..
-
-    // 20201030312134414542
-
-    // [[2], [0, 2, 0, 1, 0], [3], [0, 3, 0], [0, 1, 0], [0, 2, 1], [3], [1], [0, 2, 0], [1], [4], [1], [4], [1], [0, 3, 0], [1], [4], [0], [0, 2, 0]]
-    // [2] 0 [2] 0 [1] 0 [3] 0 [3] 0 [0] 1 [0] 0 [2] 1 [3] 1 [0] 2 [0] 1 [4] 1 [4] 1 [0] 3 [0] 1 [4] 0 [0] 2 [0]
-    //  0     9     2     1     7        .        4  .  3  .     .     .  5  .  6  .     .     .  8        .
 
     val blocksFlatten = blocks.flatten()
     val newIndicesFlatten = newIndices.toList().flatten()
@@ -89,10 +76,6 @@ fun part2(input: String): Long {
         }
         p1++
     }
-
-//    println(blocksFlatten)
-//    println(newIndicesFlatten)
-//    println(finalBlocks)
 
     return finalBlocks.withIndex().sumOf { (index, value) -> index * value.toLong() }
 }
