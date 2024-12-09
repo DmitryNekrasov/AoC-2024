@@ -4,20 +4,20 @@ import assertEquals
 import println
 import readInput
 
-fun part1(input: List<String>): Int {
-    return input.size
+fun part1(input: String): Int {
+    return input.length
 }
 
-fun part2(input: List<String>): Int {
-    return input.size
+fun part2(input: String): Int {
+    return input.length
 }
 
 fun main() {
     run {
-        val input = readInput("Day09_test01")
+        val input = readInput("Day09_test01").first()
 
         run {
-            val expected = -1
+            val expected = 1928
             val actual = part1(input)
             assertEquals(expected, actual)
         }
@@ -30,7 +30,7 @@ fun main() {
     }
 
     run {
-        val input = readInput("Day09")
+        val input = readInput("Day09").first()
         part1(input).println()
         part2(input).println()
     }
