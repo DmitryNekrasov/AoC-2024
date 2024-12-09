@@ -28,7 +28,7 @@ The solution implements a deterministic finite automaton (DFA) with the followin
     - Returns to state 0 on invalid transitions (error recovery)
 
 <p align="center">
-  <img src="automata.png" alt="Work of plugin"/>
+  <img src="automata.png"/>
 </p>
 
 ### Pattern Recognition Process
