@@ -33,8 +33,8 @@ fun part1(input: String): Long {
     return blocks.filter { it != -1 }.withIndex().sumOf { (index, value) -> index * value.toLong() }
 }
 
-fun part2(input: String): Int {
-    return input.length
+fun part2(input: String): Long {
+    return 0L
 }
 
 fun main() {
@@ -48,7 +48,7 @@ fun main() {
         }
 
         run {
-            val expected = -1
+            val expected = 2858L
             val actual = part2(input)
             assertEquals(expected, actual)
         }
