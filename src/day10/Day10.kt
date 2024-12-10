@@ -4,15 +4,17 @@ import assertEquals
 import println
 import readInput
 
-fun List<String>.getTrailheadScore(startI: Int, startJ: Int): Int {
+fun List<String>.getTrailheadScore(startI: Int, startJ: Int): Pair<Int, Int> {
     val n = size
     val m = first().length
     val visited = Array(n) { BooleanArray(m) }
     val finals = HashSet<Pair<Int, Int>>()
+    var trailCount = 0
 
     fun dfs(i: Int, j: Int) {
         if (this[i][j] == '9') {
             finals += i to j
+            trailCount++
         } else {
             visited[i][j] = true
             for ((di, dj) in listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)) {
@@ -28,45 +30,42 @@ fun List<String>.getTrailheadScore(startI: Int, startJ: Int): Int {
 
     dfs(startI, startJ)
 
-    return finals.size
+    return finals.size to trailCount
 }
 
-fun part1(grid: List<String>): Int {
-    var result = 0
+fun solve(grid: List<String>): Pair<Int, Int> {
+    var totalScore = 0
+    var totalRating = 0
     for (i in grid.indices) {
         for (j in grid.first().indices) {
             if (grid[i][j] == '0') {
-                result += grid.getTrailheadScore(i, j)
+                val (score, rating) = grid.getTrailheadScore(i, j)
+                totalScore += score
+                totalRating += rating
             }
         }
     }
-    return result
-}
-
-fun part2(input: List<String>): Int {
-    return input.size
+    return totalScore to totalRating
 }
 
 fun main() {
     run {
         val input = readInput("Day10_test01")
+        val (actualScore, actualRating) = solve(input)
 
         run {
             val expected = 36
-            val actual = part1(input)
-            assertEquals(expected, actual)
+            assertEquals(expected, actualScore)
         }
 
         run {
             val expected = 81
-            val actual = part2(input)
-            assertEquals(expected, actual)
+            assertEquals(expected, actualRating)
         }
     }
 
     run {
         val input = readInput("Day10")
-        part1(input).println()
-        part2(input).println()
+        solve(input).println()
     }
 }
