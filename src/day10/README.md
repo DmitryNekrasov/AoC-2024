@@ -38,7 +38,7 @@ The solution implements a clever hybrid approach that solves both parts in a sin
     - Worst case: $$O(4^H)$$ where H is the maximum path length
     - In practice, much better due to height constraints
 
-Overall Complexity: $$O(N*M*4^H)$$ where:
+Overall Complexity: $$O(N * M * 4^H)$$ where:
 - N = grid height
 - M = grid width
 - H = maximum possible path length
