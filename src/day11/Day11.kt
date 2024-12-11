@@ -31,23 +31,21 @@ fun Long.split(): List<Long> {
     return listOf(left, right)
 }
 
-fun Long.applyRule() =
-    when {
-        this == 0L -> listOf(1L)
-        hasAnEvenNumberOfDigits -> split()
-        else -> listOf(this * 2024L)
+fun part1(nums: List<Long>): Int {
+    fun Long.splitNumber(step: Int): Int {
+        if (step == 0) return 1
+        return when {
+            this == 0L -> 1L.splitNumber(step - 1)
+            hasAnEvenNumberOfDigits -> split().let { (left, right) -> left.splitNumber(step - 1) + right.splitNumber(step - 1) }
+            else ->(this * 2024L).splitNumber(step - 1)
+        }
     }
 
-fun part1(nums: List<Long>): Int {
-    var list = nums
-    repeat(25) {
-        list = list.flatMap { it.applyRule() }
-    }
-    return list.size
+    return nums.sumOf { it.splitNumber(25) }
 }
 
-fun part2(input: List<Long>): Int {
-    return input.size
+fun part2(nums: List<Long>): Int {
+    return 0
 }
 
 fun main() {
