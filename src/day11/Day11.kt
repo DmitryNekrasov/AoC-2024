@@ -31,16 +31,19 @@ fun Long.split(): List<Long> {
     return listOf(left, right)
 }
 
-fun part1(nums: List<Long>): Int {
-    for (num in nums) {
-        println("$num: ${num.hasAnEvenNumberOfDigits}")
-        if (num.hasAnEvenNumberOfDigits) {
-            val (left, right) = num.split()
-            println("left = $left, right = $right")
-        }
+fun Long.applyRule() =
+    when {
+        this == 0L -> listOf(1L)
+        hasAnEvenNumberOfDigits -> split()
+        else -> listOf(this * 2024L)
     }
 
-    return nums.size
+fun part1(nums: List<Long>): Int {
+    var list = nums
+    repeat(25) {
+        list = list.flatMap { it.applyRule() }
+    }
+    return list.size
 }
 
 fun part2(input: List<Long>): Int {
