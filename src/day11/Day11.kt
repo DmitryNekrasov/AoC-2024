@@ -31,21 +31,21 @@ fun Long.split(): List<Long> {
     return listOf(left, right)
 }
 
-fun part1(nums: List<Long>): Int {
-    fun Long.splitNumber(step: Int): Int {
+fun solve(nums: List<Long>, step: Int): Long {
+    val cache = HashMap<Pair<Long, Int>, Long>()
+
+    fun Long.splitNumber(step: Int): Long {
         if (step == 0) return 1
-        return when {
-            this == 0L -> 1L.splitNumber(step - 1)
-            hasAnEvenNumberOfDigits -> split().let { (left, right) -> left.splitNumber(step - 1) + right.splitNumber(step - 1) }
-            else ->(this * 2024L).splitNumber(step - 1)
+        return cache.getOrPut(this to step) {
+            when {
+                this == 0L -> 1L.splitNumber(step - 1)
+                hasAnEvenNumberOfDigits -> split().let { (left, right) -> left.splitNumber(step - 1) + right.splitNumber(step - 1) }
+                else ->(this * 2024L).splitNumber(step - 1)
+            }
         }
     }
 
-    return nums.sumOf { it.splitNumber(25) }
-}
-
-fun part2(nums: List<Long>): Int {
-    return 0
+    return nums.sumOf { it.splitNumber(step) }
 }
 
 fun main() {
@@ -53,21 +53,19 @@ fun main() {
         val input = readInput("Day11_test01").first().split(" ").map(String::toLong)
 
         run {
-            val expected = 55312
-            val actual = part1(input)
+            val expected = 55312L
+            val actual = solve(input, 25)
             assertEquals(expected, actual)
         }
 
         run {
-            val expected = -1
-            val actual = part2(input)
-            assertEquals(expected, actual)
+            solve(input, 75).println()
         }
     }
 
     run {
         val input = readInput("Day11").first().split(" ").map(String::toLong)
-        part1(input).println()
-        part2(input).println()
+        solve(input, 25).println()
+        solve(input, 75).println()
     }
 }
