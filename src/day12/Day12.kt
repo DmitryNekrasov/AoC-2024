@@ -62,19 +62,33 @@ fun part2(grid: List<String>): Int {
         return area
     }
 
+    fun List<Int>.numberOfContinuousSections(): Int {
+        var result = 0
+        for (i in 1..lastIndex) {
+            if (this[i] - this[i - 1]  > 1) {
+                result++
+            }
+        }
+        return result + 1
+    }
+
+    var result = 0
     for (i in 0..<n) {
         for (j in 0..<m) {
             if (!visited[i][j]) {
                 verticalTransitions.clear()
                 horizontalTransitions.clear()
                 val area = dfs(i, j, grid[i][j])
-                println("verticalTransitions = $verticalTransitions")
-                println("horizontalTransitions = $horizontalTransitions")
+//                println("verticalTransitions = $verticalTransitions")
+//                println("horizontalTransitions = $horizontalTransitions")
+                val edgeNumber = verticalTransitions.values.sumOf { it.sorted().numberOfContinuousSections() } +
+                        horizontalTransitions.values.sumOf { it.sorted().numberOfContinuousSections() }
+                result += area * edgeNumber
             }
         }
     }
 
-    return grid.size
+    return result
 }
 
 fun main() {
@@ -94,9 +108,9 @@ fun main() {
         }
     }
 
-//    run {
-//        val input = readInput("Day12")
-//        part1(input).println()
-//        part2(input).println()
-//    }
+    run {
+        val input = readInput("Day12")
+        part1(input).println()
+        part2(input).println()
+    }
 }
