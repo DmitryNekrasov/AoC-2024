@@ -8,7 +8,6 @@ fun part1(input: List<String>): Int {
     val grid = input.map { it.toCharArray() }
     val n = grid.size
     val m = grid.first().size
-
     val visited = Array(n) { BooleanArray(m) }
 
     fun dfs(i: Int, j: Int, c: Char): Pair<Int, Int> {  // area -> perimeter
