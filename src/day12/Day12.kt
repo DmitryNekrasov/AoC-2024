@@ -4,10 +4,9 @@ import assertEquals
 import println
 import readInput
 
-fun part1(input: List<String>): Int {
-    val grid = input.map { it.toCharArray() }
+fun part1(grid: List<String>): Int {
     val n = grid.size
-    val m = grid.first().size
+    val m = grid.first().length
     val visited = Array(n) { BooleanArray(m) }
 
     fun dfs(i: Int, j: Int, c: Char): Pair<Int, Int> {  // area -> perimeter
