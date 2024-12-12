@@ -36,8 +36,45 @@ fun part1(grid: List<String>): Int {
     return result
 }
 
-fun part2(input: List<String>): Int {
-    return input.size
+fun part2(grid: List<String>): Int {
+    val n = grid.size
+    val m = grid.first().length
+    val visited = Array(n) { BooleanArray(m) }
+
+    val verticalTransitions = HashMap<Pair<Int, Int>, MutableList<Int>>()
+    val horizontalTransitions = HashMap<Pair<Int, Int>, MutableList<Int>>()
+
+    fun dfs(i: Int, j: Int, c: Char, prevI: Int = -1, prevJ: Int = -1): Int {
+        if (i !in 0..<n || j !in 0..<m || grid[i][j] != c) {
+            if (prevI == i) {
+                verticalTransitions.getOrPut(prevJ to j) { mutableListOf() } += i
+            } else {
+                horizontalTransitions.getOrPut(prevI to i) { mutableListOf() } += j
+            }
+            return 0
+        }
+        if (visited[i][j]) return 0
+        visited[i][j] = true
+        var area = 1
+        for ((di, dj) in listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)) {
+            area += dfs(i + di, j + dj, c, i, j)
+        }
+        return area
+    }
+
+    for (i in 0..<n) {
+        for (j in 0..<m) {
+            if (!visited[i][j]) {
+                verticalTransitions.clear()
+                horizontalTransitions.clear()
+                val area = dfs(i, j, grid[i][j])
+                println("verticalTransitions = $verticalTransitions")
+                println("horizontalTransitions = $horizontalTransitions")
+            }
+        }
+    }
+
+    return grid.size
 }
 
 fun main() {
@@ -57,9 +94,9 @@ fun main() {
         }
     }
 
-    run {
-        val input = readInput("Day12")
-        part1(input).println()
-        part2(input).println()
-    }
+//    run {
+//        val input = readInput("Day12")
+//        part1(input).println()
+//        part2(input).println()
+//    }
 }
