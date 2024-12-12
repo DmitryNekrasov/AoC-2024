@@ -79,8 +79,6 @@ fun part2(grid: List<String>): Int {
                 verticalTransitions.clear()
                 horizontalTransitions.clear()
                 val area = dfs(i, j, grid[i][j])
-//                println("verticalTransitions = $verticalTransitions")
-//                println("horizontalTransitions = $horizontalTransitions")
                 val edgeNumber = verticalTransitions.values.sumOf { it.sorted().numberOfContinuousSections() } +
                         horizontalTransitions.values.sumOf { it.sorted().numberOfContinuousSections() }
                 result += area * edgeNumber
