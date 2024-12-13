@@ -3,13 +3,22 @@ package day13
 import assertEquals
 import println
 import readInput
-import kotlin.collections.plusAssign
 
-data class Equation(val aX: Int, val aY: Int, val bX: Int, val bY: Int, val targetX: Int, val targetY: Int)
+data class Equation(val aX: Long, val aY: Long, val bX: Long, val bY: Long, val targetX: Long, val targetY: Long) {
+    fun solve(): Pair<Long, Long> {
+        val m = (targetY - aY * targetX / aX.toDouble()) / (bY - aY * bX / aX.toDouble())
+        val n = (targetX - m * bX) / aX
+        return (n + 0.1).toLong() to (m + 0.1).toLong()
+    }
+
+    fun verify(n: Long, m: Long): Boolean {
+        return n * aX + m * bX == targetX && n * aY + m * bY == targetY
+    }
+}
 
 fun List<String>.parseEquation(): Equation {
     val list = this.flatMap { line ->
-        line.split(": ").last().split(", ").map { it.substring(2) }.map(String::toInt)
+        line.split(": ").last().split(", ").map { it.substring(2) }.map(String::toLong)
     }
     return Equation(list[0], list[1], list[2], list[3], list[4], list[5])
 }
@@ -25,10 +34,16 @@ fun List<String>.parse(): List<Equation> {
     }.map(List<String>::parseEquation)
 }
 
-fun part1(equations: List<Equation>): Int {
-    println(equations.joinToString("\n"))
+fun part1(equations: List<Equation>): Long {
+    var result = 0L
+    for (equation in equations) {
+        val (n, m) = equation.solve()
+        if (equation.verify(n, m)) {
+            result += 3 * n + m
+        }
+    }
 
-    return equations.size
+    return result
 }
 
 fun part2(equations: List<Equation>): Int {
@@ -40,7 +55,7 @@ fun main() {
         val input = readInput("Day13_test01").parse()
 
         run {
-            val expected = 480
+            val expected = 480L
             val actual = part1(input)
             assertEquals(expected, actual)
         }
