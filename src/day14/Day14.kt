@@ -8,10 +8,14 @@ fun String.parse() = this.split(" ").flatMap { it.substring(2).split(",").map(St
 
 fun List<String>.parse() = this.map(String::parse)
 
-fun part1(input: List<List<Int>>, N: Int, M: Int): Int {
-    println(input.joinToString("\n"))
+const val TIME = 100
 
-    return input.size
+fun part1(input: List<List<Int>>, N: Int, M: Int): Int {
+    val finalPoints = input.map { (x, y, dx, dy) -> (x + dx * TIME).mod(N) to (y + dy * TIME).mod(M) }
+    return finalPoints.count { (x, y) -> x < N / 2 && y < M / 2 } *
+            finalPoints.count { (x, y) -> x < N / 2 && y > M / 2 } *
+            finalPoints.count { (x, y) -> x > N / 2 && y < M / 2 } *
+            finalPoints.count { (x, y) -> x > N / 2 && y > M / 2 }
 }
 
 fun part2(input: List<List<Int>>, N: Int, M: Int): Int {
