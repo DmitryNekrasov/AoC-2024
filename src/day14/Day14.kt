@@ -10,43 +10,40 @@ fun List<String>.parse() = this.map(String::parse)
 
 const val TIME = 100
 
-fun part1(input: List<List<Int>>, N: Int, M: Int): Int {
-    val finalPoints = input.map { (x, y, dx, dy) -> (x + dx * TIME).mod(N) to (y + dy * TIME).mod(M) }
-    return finalPoints.count { (x, y) -> x < N / 2 && y < M / 2 } *
-            finalPoints.count { (x, y) -> x < N / 2 && y > M / 2 } *
-            finalPoints.count { (x, y) -> x > N / 2 && y < M / 2 } *
-            finalPoints.count { (x, y) -> x > N / 2 && y > M / 2 }
+fun part1(input: List<List<Int>>, n: Int, m: Int): Int {
+    val finalPoints = input.map { (x, y, dx, dy) -> (x + dx * TIME).mod(n) to (y + dy * TIME).mod(m) }
+    return finalPoints.count { (x, y) -> x < n / 2 && y < m / 2 } *
+            finalPoints.count { (x, y) -> x < n / 2 && y > m / 2 } *
+            finalPoints.count { (x, y) -> x > n / 2 && y < m / 2 } *
+            finalPoints.count { (x, y) -> x > n / 2 && y > m / 2 }
 }
 
-fun part2(input: List<List<Int>>, N: Int, M: Int): Int {
+fun part2(input: List<List<Int>>, n: Int, m: Int): Int {
     return input.size
 }
 
 fun main() {
     run {
         val input = readInput("Day14_test01").parse()
-        val N = 11
-        val M = 7
+        val n = 11
+        val m = 7
 
         run {
             val expected = 12
-            val actual = part1(input, N, M)
+            val actual = part1(input, n, m)
             assertEquals(expected, actual)
         }
 
         run {
-            val expected = -1
-            val actual = part2(input, N, M)
-            assertEquals(expected, actual)
+            part2(input, n, m)
         }
     }
 
     run {
         val input = readInput("Day14").parse()
-        val N = 101
-        val M = 103
-
-        part1(input, N, M).println()
-        part2(input, N, M).println()
+        val n = 101
+        val m = 103
+        part1(input, n, m).println()
+        part2(input, n, m)
     }
 }
