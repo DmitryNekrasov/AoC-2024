@@ -19,17 +19,6 @@ fun part1(input: List<IntArray>, n: Int, m: Int): Int {
             finalPoints.count { (x, y) -> x > n / 2 && y > m / 2 }
 }
 
-fun CharArray.isSymmetric(): Boolean {
-    for (i in 0..size / 2) {
-        if (this[i] != this[size - 1 - i]) {
-            return false
-        }
-    }
-    return true
-}
-
-fun Array<CharArray>.isSymmetric() = this.all(CharArray::isSymmetric)
-
 fun part2(input: List<IntArray>, n: Int, m: Int): Int {
     val map = Array(m) { CharArray(n) { '.' } }
 
