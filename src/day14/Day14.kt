@@ -19,7 +19,7 @@ fun part1(input: List<IntArray>, n: Int, m: Int): Int {
             finalPoints.count { (x, y) -> x > n / 2 && y > m / 2 }
 }
 
-fun part2(input: List<IntArray>, n: Int, m: Int): Int {
+fun part2(input: List<IntArray>, n: Int, m: Int) {
     val map = Array(m) { CharArray(n) { '.' } }
 
     val outFile = File("out.txt")
@@ -42,8 +42,6 @@ fun part2(input: List<IntArray>, n: Int, m: Int): Int {
         }
         time++
     } while (time < 15_000)
-
-    return input.size
 }
 
 fun main() {
