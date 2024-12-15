@@ -94,6 +94,54 @@ fun List<CharArray>.toPart2() =
 
 fun main() {
     run {
+        val grid = """
+            ################
+            ##...[][][]@..##
+            ################
+        """.trimIndent().split("\n").map { it.toCharArray() }
+        val commands = "<<<"
+        val expected = 312
+        val actual = part2(grid, commands)
+        assertEquals(expected, actual)
+    }
+
+    run {
+        val grid = """
+            ################
+            ##..[][][]@...##
+            ################
+        """.trimIndent().split("\n").map { it.toCharArray() }
+        val commands = "<<<"
+        val expected = 312
+        val actual = part2(grid, commands)
+        assertEquals(expected, actual)
+    }
+
+    run {
+        val grid = """
+            ################
+            ##..@[][][]...##
+            ################
+        """.trimIndent().split("\n").map { it.toCharArray() }
+        val commands = ">>>"
+        val expected = 330
+        val actual = part2(grid, commands)
+        assertEquals(expected, actual)
+    }
+
+    run {
+        val grid = """
+            ################
+            ##...@[][][]..##
+            ################
+        """.trimIndent().split("\n").map { it.toCharArray() }
+        val commands = ">>>"
+        val expected = 330
+        val actual = part2(grid, commands)
+        assertEquals(expected, actual)
+    }
+
+    run {
         val (grid, commands) = readInput("Day15_test01").parse()
         val part2Grid = grid.toPart2()
 
