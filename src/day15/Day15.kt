@@ -7,39 +7,29 @@ import readInput
 fun List<String>.parse() =
     partition { it.startsWith("#") }.let { (first, second) -> first.map(String::toCharArray) to second.joinToString("") }
 
-fun List<CharArray>.shiftLeft(startI: Int, startJ: Int): Pair<Int, Int> {
-    var j = startJ - 1
-    while (this[startI][j] == 'O') j--
-    if (this[startI][j] == '.') {
-        this[startI][j] = 'O'
-        this[startI][startJ - 1] = '@'
+fun List<CharArray>.shift(startI: Int, startJ: Int, di: Int, dj: Int): Pair<Int, Int> {
+    var i = startI + di
+    var j = startJ + dj
+    while (this[i][j] == 'O') {
+        i += di
+        j += dj
+    }
+    if (this[i][j] == '.') {
+        this[i][j] = 'O'
+        this[startI + di][startJ + dj] = '@'
         this[startI][startJ] = '.'
-        return startI to startJ - 1
+        return startI + di to startJ + dj
     }
     return startI to startJ
 }
 
-fun List<CharArray>.shiftRight(startI: Int, startJ: Int): Pair<Int, Int> {
-    var j = startJ + 1
-    while (this[startI][j] == 'O') j++
-    if (this[startI][j] == '.') {
-        this[startI][j] = 'O'
-        this[startI][startJ + 1] = '@'
-        this[startI][startJ] = '.'
-        return startI to startJ + 1
-    }
-    return startI to startI
-}
+fun List<CharArray>.shiftLeft(i: Int, j: Int) = shift(i, j, 0, -1)
 
-fun List<CharArray>.shiftTop(startI: Int, startJ: Int): Pair<Int, Int> {
-    // TODO
-    return startI to startI
-}
+fun List<CharArray>.shiftRight(i: Int, j: Int) = shift(i, j, 0, 1)
 
-fun List<CharArray>.shiftBottom(startI: Int, startJ: Int): Pair<Int, Int> {
-    // TODO
-    return startI to startI
-}
+fun List<CharArray>.shiftTop(i: Int, j: Int) = shift(i, j, -1, 0)
+
+fun List<CharArray>.shiftBottom(i: Int, j: Int) = shift(i, j, 1, 0)
 
 val List<CharArray>.start: Pair<Int, Int>
     get() {
