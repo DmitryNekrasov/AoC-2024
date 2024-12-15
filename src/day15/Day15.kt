@@ -174,9 +174,6 @@ fun part2(grid: List<CharArray>, commands: String): Int {
         i = nextI; j = nextJ
     }
 
-    grid.joinToString("\n") { it.joinToString("") }
-        .also { println(it) }
-
     return grid.hash
 }
 
