@@ -73,6 +73,30 @@ fun part1(grid: List<CharArray>, commands: String): Int {
 }
 
 fun part2(grid: List<CharArray>, commands: String): Int {
+    fun List<CharArray>.shiftHorizontal(startI: Int, startJ: Int, dj: Int): Pair<Int, Int> {
+        return startI to startJ
+    }
+
+    fun List<CharArray>.shiftLeft(i: Int, j: Int) = shiftHorizontal(i, j, -1)
+
+    fun List<CharArray>.shiftRight(i: Int, j: Int) = shiftHorizontal(i, j, 1)
+
+    fun List<CharArray>.shiftTop(i: Int, j: Int): Pair<Int, Int> = TODO()
+
+    fun List<CharArray>.shiftBottom(i: Int, j: Int): Pair<Int, Int> = TODO()
+
+    var (i, j) = grid.start
+    for (command in commands) {
+        val (nextI, nextJ) = when (command) {
+            '<' -> grid.shiftLeft(i, j)
+            '>' -> grid.shiftRight(i, j)
+            '^' -> grid.shiftTop(i, j)
+            'v' -> grid.shiftBottom(i, j)
+            else -> throw RuntimeException("Should not reach here")
+        }
+        i = nextI; j = nextJ
+    }
+
     grid.joinToString("\n") { it.joinToString("") }
         .also { println(it) }
 
