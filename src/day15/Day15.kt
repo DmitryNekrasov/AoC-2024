@@ -39,6 +39,19 @@ val List<CharArray>.start: Pair<Int, Int>
         throw RuntimeException("Should not reach here")
     }
 
+val List<CharArray>.hash: Int
+    get() {
+        var result = 0
+        for (i in indices) {
+            for (j in first().indices) {
+                if (this[i][j] == 'O') {
+                    result += i * 100 + j
+                }
+            }
+        }
+        return result
+    }
+
 fun part1(grid: List<CharArray>, commands: String): Int {
     var (i, j) = grid.start
     for (command in commands) {
@@ -52,7 +65,7 @@ fun part1(grid: List<CharArray>, commands: String): Int {
         i = nextI; j = nextJ
     }
 
-    return commands.length
+    return grid.hash
 }
 
 fun part2(grid: List<CharArray>, commands: String): Int {
