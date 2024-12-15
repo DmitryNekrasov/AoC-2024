@@ -68,7 +68,6 @@ fun part1(grid: List<CharArray>, commands: String): Int {
         }
         i = nextI; j = nextJ
     }
-
     return grid.hash
 }
 
