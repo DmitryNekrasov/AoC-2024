@@ -95,13 +95,17 @@ fun part2(grid: List<CharArray>, commands: String): Int {
         return startI to startJ
     }
 
+    fun List<CharArray>.shiftVertical(startI: Int, startJ: Int, di: Int): Pair<Int, Int> {
+        TODO()
+    }
+
     fun List<CharArray>.shiftLeft(i: Int, j: Int) = shiftHorizontal(i, j, -1)
 
     fun List<CharArray>.shiftRight(i: Int, j: Int) = shiftHorizontal(i, j, 1)
 
-    fun List<CharArray>.shiftTop(i: Int, j: Int): Pair<Int, Int> = TODO()
+    fun List<CharArray>.shiftTop(i: Int, j: Int) = shiftVertical(i, j, -1)
 
-    fun List<CharArray>.shiftBottom(i: Int, j: Int): Pair<Int, Int> = TODO()
+    fun List<CharArray>.shiftBottom(i: Int, j: Int) = shiftVertical(i, j, 1)
 
     var (i, j) = grid.start
     for (command in commands) {
