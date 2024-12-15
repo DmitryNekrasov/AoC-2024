@@ -8,23 +8,30 @@ fun List<String>.parse() =
     partition { it.startsWith("#") }.let { (first, second) -> first.map(String::toCharArray) to second.joinToString("") }
 
 fun List<CharArray>.shiftLeft(startI: Int, startJ: Int): Pair<Int, Int> {
-    // TODO
-    return -1 to -1
+    var j = startJ - 1
+    while (this[startI][j] == 'O') j--
+    if (this[startI][j] == '.') {
+        this[startI][j] = 'O'
+        this[startI][startJ - 1] = '@'
+        this[startI][startJ] = '.'
+        return startI to j - 1
+    }
+    return startI to startJ
 }
 
 fun List<CharArray>.shiftRight(startI: Int, startJ: Int): Pair<Int, Int> {
     // TODO
-    return -1 to -1
+    return startI to startI
 }
 
 fun List<CharArray>.shiftTop(startI: Int, startJ: Int): Pair<Int, Int> {
     // TODO
-    return -1 to -1
+    return startI to startI
 }
 
 fun List<CharArray>.shiftBottom(startI: Int, startJ: Int): Pair<Int, Int> {
     // TODO
-    return -1 to -1
+    return startI to startI
 }
 
 val List<CharArray>.start: Pair<Int, Int>
