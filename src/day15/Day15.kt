@@ -95,34 +95,63 @@ fun part2(grid: List<CharArray>, commands: String): Int {
         return startI to startJ
     }
 
+    val cache = HashMap<Pair<Int, Int>, Boolean>()
+
     fun List<CharArray>.isMovable(i: Int, j: Int, di: Int): Boolean {
-        return when (this[i][j]) {
-            '@' -> when (this[i + di][j]) {
-                '.' -> true
-                '[' -> isMovable(i + di, j, di)
-                ']' -> isMovable(i + di, j - 1, di)
-                else -> false
+        return cache.getOrPut(i to j) {
+            when (this[i][j]) {
+                '@' -> when (this[i + di][j]) {
+                    '.' -> true
+                    '[' -> isMovable(i + di, j, di)
+                    ']' -> isMovable(i + di, j - 1, di)
+                    else -> false
+                }
+                '[' -> {
+                    val left = when (this[i + di][j]) {
+                        ']' -> isMovable(i + di, j - 1, di)
+                        '[' -> isMovable(i + di, j, di)
+                        '.' -> true
+                        else -> false
+                    }
+                    val right = when (this[i + di][j + 1]) {
+                        '[' -> isMovable(i + di, j + 1, di)
+                        ']', '.' -> true
+                        else -> false
+                    }
+                    left && right
+                }
+                else -> throw RuntimeException("Should not reach here")
+            }
+        }
+    }
+
+    fun List<CharArray>.moveOne(i: Int, j: Int, di: Int) {
+        when (this[i][j]) {
+            '@' -> {
+                this[i + di][j] = '@'
+                this[i][j] = '.'
             }
             '[' -> {
-                val left = when (this[i + di][j]) {
-                    ']' -> isMovable(i + di, j - 1, di)
-                    '[' -> isMovable(i + di, j, di)
-                    '.' -> true
-                    else -> false
-                }
-                val right = when (this[i + di][j + 1]) {
-                    '[' -> isMovable(i + di, j + 1, di)
-                    ']', '.' -> true
-                    else -> false
-                }
-                left && right
+                this[i + di][j] = '['
+                this[i + di][j + 1] = ']'
+                this[i][j] = '.'
+                this[i][j + 1] = '.'
             }
             else -> throw RuntimeException("Should not reach here")
         }
     }
 
     fun List<CharArray>.shiftVertical(startI: Int, startJ: Int, di: Int): Pair<Int, Int> {
-        TODO()
+        cache.clear()
+        if (isMovable(startI, startJ, di)) {
+            val sortedPoints = cache.keys.sortedBy { it.first }.toTypedArray()
+            if (di > 0) sortedPoints.reverse()
+            for ((i, j) in sortedPoints) {
+                moveOne(i, j, di)
+            }
+            return startI + di to startJ
+        }
+        return startI to startJ
     }
 
     fun List<CharArray>.shiftLeft(i: Int, j: Int) = shiftHorizontal(i, j, -1)
