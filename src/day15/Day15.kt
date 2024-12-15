@@ -95,6 +95,32 @@ fun part2(grid: List<CharArray>, commands: String): Int {
         return startI to startJ
     }
 
+    fun List<CharArray>.isMovable(i: Int, j: Int, di: Int): Boolean {
+        return when (this[i][j]) {
+            '@' -> when (this[i + di][j]) {
+                '.' -> true
+                '[' -> isMovable(i + di, j, di)
+                ']' -> isMovable(i + di, j - 1, di)
+                else -> false
+            }
+            '[' -> {
+                val left = when (this[i + di][j]) {
+                    ']' -> isMovable(i + di, j - 1, di)
+                    '[' -> isMovable(i + di, j, di)
+                    '.' -> true
+                    else -> false
+                }
+                val right = when (this[i + di][j + 1]) {
+                    '[' -> isMovable(i + di, j + 1, di)
+                    ']', '.' -> true
+                    else -> false
+                }
+                left && right
+            }
+            else -> throw RuntimeException("Should not reach here")
+        }
+    }
+
     fun List<CharArray>.shiftVertical(startI: Int, startJ: Int, di: Int): Pair<Int, Int> {
         TODO()
     }
