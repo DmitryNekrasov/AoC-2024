@@ -4,34 +4,37 @@ import assertEquals
 import println
 import readInput
 
-fun part1(input: List<String>): Int {
-    return input.size
+fun List<String>.parse() =
+    partition { it.startsWith("#") }.let { (first, second) -> first.map(String::toCharArray) to second.joinToString("") }
+
+fun part1(grid: List<CharArray>, commands: String): Int {
+    return commands.length
 }
 
-fun part2(input: List<String>): Int {
-    return input.size
+fun part2(grid: List<CharArray>, commands: String): Int {
+    return commands.length
 }
 
 fun main() {
     run {
-        val input = readInput("Day15_test01")
+        val (grid, commands) = readInput("Day15_test01").parse()
 
         run {
             val expected = 10092
-            val actual = part1(input)
+            val actual = part1(grid, commands)
             assertEquals(expected, actual)
         }
 
         run {
             val expected = -1
-            val actual = part2(input)
+            val actual = part2(grid, commands)
             assertEquals(expected, actual)
         }
     }
 
     run {
-        val input = readInput("Day15")
-        part1(input).println()
-        part2(input).println()
+        val (grid, commands) = readInput("Day15").parse()
+        part1(grid, commands).println()
+        part2(grid, commands).println()
     }
 }
