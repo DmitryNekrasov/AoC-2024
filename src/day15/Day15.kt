@@ -112,7 +112,6 @@ fun main() {
     run {
         val (grid, commands) = readInput("Day15").parse()
         val part2Grid = grid.toPart2()
-        "11".toCharArray()
         part1(grid, commands).println()
         part2(part2Grid, commands).println()
     }
