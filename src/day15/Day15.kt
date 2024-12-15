@@ -14,13 +14,20 @@ fun List<CharArray>.shiftLeft(startI: Int, startJ: Int): Pair<Int, Int> {
         this[startI][j] = 'O'
         this[startI][startJ - 1] = '@'
         this[startI][startJ] = '.'
-        return startI to j - 1
+        return startI to startJ - 1
     }
     return startI to startJ
 }
 
 fun List<CharArray>.shiftRight(startI: Int, startJ: Int): Pair<Int, Int> {
-    // TODO
+    var j = startJ + 1
+    while (this[startI][j] == 'O') j++
+    if (this[startI][j] == '.') {
+        this[startI][j] = 'O'
+        this[startI][startJ + 1] = '@'
+        this[startI][startJ] = '.'
+        return startI to startJ + 1
+    }
     return startI to startI
 }
 
