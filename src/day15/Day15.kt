@@ -103,7 +103,7 @@ fun main() {
         }
 
         run {
-            val expected = -1
+            val expected = 9021
             val actual = part2(part2Grid, commands)
             assertEquals(expected, actual)
         }
