@@ -73,12 +73,29 @@ fun part1(grid: List<CharArray>, commands: String): Int {
 }
 
 fun part2(grid: List<CharArray>, commands: String): Int {
+    grid.joinToString("\n") { it.joinToString("") }
+        .also { println(it) }
+
     return commands.length
 }
+
+fun List<CharArray>.toPart2() =
+    this.map {
+        it.flatMap { c ->
+            when (c) {
+                '#' -> "##"
+                'O' -> "[]"
+                '.' -> ".."
+                '@' -> "@."
+                else -> throw RuntimeException("Should not reach here")
+            }.toList()
+        }.toCharArray()
+    }
 
 fun main() {
     run {
         val (grid, commands) = readInput("Day15_test01").parse()
+        val part2Grid = grid.toPart2()
 
         run {
             val expected = 10092
@@ -88,14 +105,16 @@ fun main() {
 
         run {
             val expected = -1
-            val actual = part2(grid, commands)
+            val actual = part2(part2Grid, commands)
             assertEquals(expected, actual)
         }
     }
 
     run {
         val (grid, commands) = readInput("Day15").parse()
+        val part2Grid = grid.toPart2()
+        "11".toCharArray()
         part1(grid, commands).println()
-        part2(grid, commands).println()
+        part2(part2Grid, commands).println()
     }
 }
