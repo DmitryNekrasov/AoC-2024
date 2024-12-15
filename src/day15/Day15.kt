@@ -48,7 +48,7 @@ val List<CharArray>.hash: Int
         var result = 0
         for (i in indices) {
             for (j in first().indices) {
-                if (this[i][j] == 'O') {
+                if (this[i][j] == 'O' || this[i][j] == '[') {
                     result += i * 100 + j
                 }
             }
@@ -75,7 +75,7 @@ fun part2(grid: List<CharArray>, commands: String): Int {
     grid.joinToString("\n") { it.joinToString("") }
         .also { println(it) }
 
-    return commands.length
+    return grid.hash
 }
 
 fun List<CharArray>.toPart2() =
