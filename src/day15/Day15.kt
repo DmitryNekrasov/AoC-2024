@@ -72,8 +72,26 @@ fun part1(grid: List<CharArray>, commands: String): Int {
     return grid.hash
 }
 
+val Char.reversed: Char
+    get() = when (this) {
+        '[' -> ']'
+        ']' -> '['
+        else -> throw RuntimeException("Should not reach here")
+    }
+
 fun part2(grid: List<CharArray>, commands: String): Int {
     fun List<CharArray>.shiftHorizontal(startI: Int, startJ: Int, dj: Int): Pair<Int, Int> {
+        var j = startJ + dj
+        while (this[startI][j] == '[' || this[startI][j] == ']') j += dj
+        if (this[startI][j] == '.') {
+            this[startI][j] = this[startI][startJ + dj]
+            this[startI][startJ + dj] = '@'
+            this[startI][startJ] = '.'
+            for (k in if (dj > 0) (startJ + 2 * dj)..j else (startJ + 2 * dj) downTo j) {
+                this[startI][k] = this[startI][k].reversed
+            }
+            return startI to startJ + dj
+        }
         return startI to startJ
     }
 
