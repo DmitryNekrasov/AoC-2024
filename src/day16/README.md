@@ -36,12 +36,12 @@ val p = Array(vertexNumber) { mutableListOf<Int>() }  // parents
 
 ## Complexity
 
-Time Complexity:
+**Time Complexity:**
 - Graph Construction: $$O(N*M)$$ where N and M are the dimensions of the maze
 - Dijkstra's Algorithm: $$O((V + E) * log(V))$$ where V is the number of vertices (4*N*M) and E is the number of edges
 - BFS for Part 2: $$O(V + E)$$
 
-Space Complexity:
+**Space Complexity:**
 - Graph Storage: $$O(V + E)$$
 - Distance Array: $$O(V)$$
 - Parent Arrays: $$O(V)$$
