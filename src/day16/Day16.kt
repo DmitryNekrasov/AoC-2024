@@ -4,7 +4,9 @@ import assertEquals
 import println
 import readInput
 import java.util.LinkedList
+import java.util.PriorityQueue
 import java.util.Queue
+import kotlin.math.min
 
 const val N = 0
 const val E = 1
@@ -34,7 +36,6 @@ fun List<String>.generateGraph(startI: Int, startJ: Int): HashMap<Int, MutableSe
 
     while (queue.isNotEmpty()) {
         val (i, j) = queue.poll()
-
         visited[i][j] = true
 
         for (k in N..W) {
@@ -75,16 +76,31 @@ fun List<String>.generateGraph(startI: Int, startJ: Int): HashMap<Int, MutableSe
     return graph
 }
 
+const val INF = 1_000_000_000
+
 fun part1(grid: List<String>): Int {
     val (startI, startJ) = grid.get('S')
     val graph = grid.generateGraph(startI, startJ)
 
-    graph.entries.joinToString("\n")
-        .also { println(it) }
+    val n = grid.size
+    val m = grid.first().length
+    val d = IntArray(4 * m * (n + 1) + 4) { INF }
+    val startId = grid.id(startI, startJ, E)
+    d[startId] = 0
+    val queue = PriorityQueue<Int> { i, j -> d[i] compareTo d[j] }
+    queue.offer(startId)
+    while (queue.isNotEmpty()) {
+        val from = queue.poll()
+        for ((to, cost) in graph[from]!!) {
+            if (d[from] + cost < d[to]) {
+                d[to] = d[from] + cost
+                queue.offer(to)
+            }
+        }
+    }
 
-    println("------------------------------------------------------")
-
-    return grid.size
+    val (endI, endJ) = grid.get('E')
+    return (0..3).minOf { direction -> d[grid.id(endI, endJ, direction)] }
 }
 
 fun part2(input: List<String>): Int {
