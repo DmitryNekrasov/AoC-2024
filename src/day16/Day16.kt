@@ -79,27 +79,39 @@ const val INF = 1_000_000_000
 
 fun part1(grid: List<String>): Int {
     val (startI, startJ) = grid.get('S')
+    val (endI, endJ) = grid.get('E')
     val graph = grid.generateGraph(startI, startJ)
 
     val n = grid.size
     val m = grid.first().length
-    val d = IntArray(4 * m * (n + 1) + 4) { INF }
+    val vertexNumber = 4 * m * (n + 1) + 5
+    for (k in N..W) {
+        graph.getOrPut(grid.id(endI, endJ, k)) { mutableSetOf() } += vertexNumber - 1 to 0
+    }
+
+    val d = IntArray(vertexNumber) { INF }
+    val p = Array(vertexNumber) { mutableListOf<Int>() }
     val startId = grid.id(startI, startJ, E)
     d[startId] = 0
     val queue = PriorityQueue<Int> { i, j -> d[i] compareTo d[j] }
     queue.offer(startId)
     while (queue.isNotEmpty()) {
         val from = queue.poll()
-        for ((to, cost) in graph[from]!!) {
-            if (d[from] + cost < d[to]) {
-                d[to] = d[from] + cost
-                queue.offer(to)
+        graph[from]?.also { neighbors ->
+            for ((to, cost) in neighbors) {
+                if (d[from] + cost < d[to]) {
+                    d[to] = d[from] + cost
+                    p[to].clear()
+                    p[to] += from
+                    queue.offer(to)
+                } else if (d[from] + cost == d[to]) {
+                    p[to] += from
+                }
             }
         }
     }
 
-    val (endI, endJ) = grid.get('E')
-    return (0..3).minOf { direction -> d[grid.id(endI, endJ, direction)] }
+    return d[vertexNumber - 1]
 }
 
 fun part2(input: List<String>): Int {
