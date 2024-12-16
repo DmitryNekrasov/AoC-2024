@@ -22,18 +22,15 @@ fun List<String>.get(c: Char): Pair<Int, Int> {
     throw RuntimeException("Should not reach here")
 }
 
+fun List<String>.id(i: Int, j: Int, direction: Int) = (i * first().length + j) * 4 + direction
+
 fun List<String>.generateGraph(startI: Int, startJ: Int): HashMap<Int, MutableSet<Pair<Int, Int>>> {
-    val n = size
-    val m = first().length
-
-    fun id(i: Int, j: Int, direction: Int) = (i * m + j) * 4 + direction
-
     val graph = HashMap<Int, MutableSet<Pair<Int, Int>>>()
 
     val queue: Queue<Pair<Int, Int>> = LinkedList()
     queue.offer(startI to startJ)
 
-    val visited = Array(n) { BooleanArray(m) }
+    val visited = Array(size) { BooleanArray(first().length) }
 
     while (queue.isNotEmpty()) {
         val (i, j) = queue.poll()
