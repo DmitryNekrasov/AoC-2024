@@ -3,6 +3,8 @@ package day16
 import assertEquals
 import println
 import readInput
+import java.util.LinkedList
+import java.util.Queue
 
 const val N = 0
 const val E = 1
@@ -21,53 +23,64 @@ fun List<String>.get(c: Char): Pair<Int, Int> {
 }
 
 fun part1(grid: List<String>): Int {
-    val n = grid.size
-    val m = grid.first().length
-    val visited = Array(n) { BooleanArray(m) }
-    val graph = HashMap<Int, MutableSet<Pair<Int, Int>>>()
+    fun generateGraph(startI: Int, startJ: Int): HashMap<Int, MutableSet<Pair<Int, Int>>> {
+        val n = grid.size
+        val m = grid.first().length
 
-    fun id(i: Int, j: Int, direction: Int) = (i * m + j) * 4 + direction
+        fun id(i: Int, j: Int, direction: Int) = (i * m + j) * 4 + direction
 
-    fun dfs(i: Int, j: Int) {
-        visited[i][j] = true
+        val graph = HashMap<Int, MutableSet<Pair<Int, Int>>>()
 
-        for (k in N..W) {
-            graph.getOrPut(id(i, j, k)) { mutableSetOf() } += id(i, j, (k + 1) % 4) to 1000
-            graph.getOrPut(id(i, j, (k + 1) % 4)) { mutableSetOf() } += id(i, j, k) to 1000
-        }
+        val queue: Queue<Pair<Int, Int>> = LinkedList()
+        queue.offer(startI to startJ)
 
-        if (grid[i - 1][j] != '#') {
-            graph.getOrPut(id(i, j, N)) { mutableSetOf() } += id(i - 1, j, N) to 1
-            graph.getOrPut(id(i - 1, j, S)) { mutableSetOf() } += id(i, j, S) to 1
-            if (!visited[i - 1][j]) {
-                dfs(i - 1, j)
+        val visited = Array(n) { BooleanArray(m) }
+
+        while (queue.isNotEmpty()) {
+            val (i, j) = queue.poll()
+
+            visited[i][j] = true
+
+            for (k in N..W) {
+                graph.getOrPut(id(i, j, k)) { mutableSetOf() } += id(i, j, (k + 1) % 4) to 1000
+                graph.getOrPut(id(i, j, (k + 1) % 4)) { mutableSetOf() } += id(i, j, k) to 1000
+            }
+
+            if (grid[i - 1][j] != '#') {
+                graph.getOrPut(id(i, j, N)) { mutableSetOf() } += id(i - 1, j, N) to 1
+                graph.getOrPut(id(i - 1, j, S)) { mutableSetOf() } += id(i, j, S) to 1
+                if (!visited[i - 1][j]) {
+                    queue.offer(i - 1 to j)
+                }
+            }
+            if (grid[i + 1][j] != '#') {
+                graph.getOrPut(id(i, j, S)) { mutableSetOf() } += id(i + 1, j, S) to 1
+                graph.getOrPut(id(i + 1, j, N)) { mutableSetOf() } += id(i, j, N) to 1
+                if (!visited[i + 1][j]) {
+                    queue.offer(i + 1 to j)
+                }
+            }
+            if (grid[i][j - 1] != '#') {
+                graph.getOrPut(id(i, j, W)) { mutableSetOf() } += id(i, j - 1, W) to 1
+                graph.getOrPut(id(i, j - 1, E)) { mutableSetOf() } += id(i, j, E) to 1
+                if (!visited[i][j - 1]) {
+                    queue.offer(i to j - 1)
+                }
+            }
+            if (grid[i][j + 1] != '#') {
+                graph.getOrPut(id(i, j, E)) { mutableSetOf() } += id(i, j + 1, E) to 1
+                graph.getOrPut(id(i, j + 1, W)) { mutableSetOf() } += id(i, j, W) to 1
+                if (!visited[i][j + 1]) {
+                    queue.offer(i to j + 1)
+                }
             }
         }
-        if (grid[i + 1][j] != '#') {
-            graph.getOrPut(id(i, j, S)) { mutableSetOf() } += id(i + 1, j, S) to 1
-            graph.getOrPut(id(i + 1, j, N)) { mutableSetOf() } += id(i, j, N) to 1
-            if (!visited[i + 1][j]) {
-                dfs(i + 1, j)
-            }
-        }
-        if (grid[i][j - 1] != '#') {
-            graph.getOrPut(id(i, j, W)) { mutableSetOf() } += id(i, j - 1, W) to 1
-            graph.getOrPut(id(i, j - 1, E)) { mutableSetOf() } += id(i, j, E) to 1
-            if (!visited[i][j - 1]) {
-                dfs(i, j - 1)
-            }
-        }
-        if (grid[i][j + 1] != '#') {
-            graph.getOrPut(id(i, j, E)) { mutableSetOf() } += id(i, j + 1, E) to 1
-            graph.getOrPut(id(i, j + 1, W)) { mutableSetOf() } += id(i, j, W) to 1
-            if (!visited[i][j + 1]) {
-                dfs(i, j + 1)
-            }
-        }
+
+        return graph
     }
 
     val (startI, startJ) = grid.get('S')
-    dfs(startI, startJ)
+    val graph = generateGraph(startI, startJ)
 
     graph.entries.joinToString("\n")
         .also { println(it) }
@@ -114,9 +127,9 @@ fun main() {
         }
     }
 
-//    run {
-//        val input = readInput("Day16")
-//        part1(input).println()
-//        part2(input).println()
-//    }
+    run {
+        val input = readInput("Day16")
+        part1(input).println()
+        part2(input).println()
+    }
 }
