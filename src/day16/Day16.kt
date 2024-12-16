@@ -25,6 +25,8 @@ fun List<String>.get(c: Char): Pair<Int, Int> {
 
 fun List<String>.id(i: Int, j: Int, direction: Int) = (i * first().length + j) * 4 + direction
 
+fun List<String>.ij(id: Int) = id / 4 / first().length to id / 4 % first().length
+
 fun List<String>.generateGraph(startI: Int, startJ: Int): HashMap<Int, MutableSet<Pair<Int, Int>>> {
     val graph = HashMap<Int, MutableSet<Pair<Int, Int>>>()
 
@@ -77,7 +79,7 @@ fun List<String>.generateGraph(startI: Int, startJ: Int): HashMap<Int, MutableSe
 
 const val INF = 1_000_000_000
 
-fun part1(grid: List<String>): Int {
+fun solve(grid: List<String>): Pair<Int, Int> {
     val (startI, startJ) = grid.get('S')
     val (endI, endJ) = grid.get('E')
     val graph = grid.generateGraph(startI, startJ)
@@ -111,49 +113,58 @@ fun part1(grid: List<String>): Int {
         }
     }
 
-    return d[vertexNumber - 1]
-}
+    fun bfs(start: Int): Int {
+        val visited = mutableSetOf<Int>()
+        val queue: Queue<Int> = LinkedList()
+        queue.offer(start)
+        while (queue.isNotEmpty()) {
+            val from = queue.poll()
+            for (to in p[from]) {
+                if (to !in visited) {
+                    visited += to
+                    queue.offer(to)
+                }
+            }
+        }
+        return visited.map { grid.ij(it) }.toSet().size
+    }
 
-fun part2(input: List<String>): Int {
-    return input.size
+    return d[vertexNumber - 1] to bfs(vertexNumber - 1)
 }
 
 fun main() {
     run {
         val input = readInput("Day16_test01")
+        val (actualPart1, actualPart2) = solve(input)
 
         run {
             val expected = 7036
-            val actual = part1(input)
-            assertEquals(expected, actual)
+            assertEquals(expected, actualPart1)
         }
 
         run {
             val expected = 45
-            val actual = part2(input)
-            assertEquals(expected, actual)
+            assertEquals(expected, actualPart2)
         }
     }
 
     run {
         val input = readInput("Day16_test02")
+        val (actualPart1, actualPart2) = solve(input)
 
         run {
             val expected = 11048
-            val actual = part1(input)
-            assertEquals(expected, actual)
+            assertEquals(expected, actualPart1)
         }
 
         run {
             val expected = 64
-            val actual = part2(input)
-            assertEquals(expected, actual)
+            assertEquals(expected, actualPart2)
         }
     }
 
     run {
         val input = readInput("Day16")
-        part1(input).println()
-        part2(input).println()
+        solve(input).println()
     }
 }
