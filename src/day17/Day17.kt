@@ -29,30 +29,34 @@ fun part1(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
     while (pc < program.size) {
         val opcode = program[pc]
         val literalOperand = program[pc + 1]
-        val comboOperand = when (literalOperand) {
-            in 0..3 -> literalOperand
-            4 -> aReg
-            5 -> bReg
-            6 -> cReg
-            7 -> -1
-            else -> throw RuntimeException("Should not reach here")
+        val comboOperand = lazy {
+            when (literalOperand) {
+                in 0..3 -> literalOperand
+                4 -> aReg
+                5 -> bReg
+                6 -> cReg
+                else -> throw RuntimeException("Should not reach here")
+            }
         }
 
-        fun dv() = aReg / (1 shl comboOperand)
+        fun dv() = aReg / (1 shl comboOperand.value)
 
         when (opcode) {
             ADV -> {
                 aReg = dv()
                 pc += 2
             }
+
             BXL -> {
                 bReg = bReg xor literalOperand
                 pc += 2
             }
+
             BST -> {
-                bReg = comboOperand % MOD
+                bReg = comboOperand.value % MOD
                 pc += 2
             }
+
             JNZ -> {
                 if (aReg != 0) {
                     pc = literalOperand
@@ -60,23 +64,28 @@ fun part1(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
                     pc += 2
                 }
             }
+
             BXC -> {
                 bReg = bReg xor cReg
                 pc += 2
             }
+
             OUT -> {
-                output += comboOperand % MOD
+                output += comboOperand.value % MOD
                 pc += 2
             }
+
             BDV -> {
                 bReg = dv()
                 pc += 2
             }
+
             CDV -> {
                 cReg = dv()
                 pc += 2
 
             }
+
             else -> throw RuntimeException("Should not reach here")
         }
     }
