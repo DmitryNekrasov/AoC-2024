@@ -18,7 +18,7 @@ const val OUT = 5
 const val BDV = 6
 const val CDV = 7
 
-fun part1(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
+fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
     var aReg = aReg
     var bReg = bReg
     var cReg = cReg
@@ -90,7 +90,11 @@ fun part1(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
         }
     }
 
-    return output.joinToString(",")
+    return output
+}
+
+fun part1(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
+    return perform(aReg, bReg, cReg, program).joinToString(",")
 }
 
 fun part2(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
