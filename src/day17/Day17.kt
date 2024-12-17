@@ -114,7 +114,10 @@ fun part2(program: List<Int>): Long {
         return if (result.isNotEmpty()) result.min() else Long.MAX_VALUE
     }
 
-    return backtrack() / 8
+    val ans = backtrack() / 8
+    assertEquals(program, perform(ans, 0L, 0L, program))
+
+    return ans
 }
 
 fun main() {
