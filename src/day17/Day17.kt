@@ -102,16 +102,12 @@ fun part2(program: List<Int>): Long {
         if (index < 0) return a
         val result = mutableListOf<Long>()
         for (mod8 in 0..7) {
-            var b = mod8
-            b = b xor 2
-            val c = (a + mod8) / (1 shl b)
-            b = b xor 7
-            b = b xor (c % 8).toInt()
-            if (b == program[index]) {
+            val performResult = perform(a + mod8, 0L, 0L, program)
+            if (performResult.first() == program[index]) {
                 result += backtrack((a + mod8) * 8, index - 1)
             }
         }
-        return if (result.isNotEmpty()) result.min() else Long.MAX_VALUE
+        return result.minOrNull() ?: Long.MAX_VALUE
     }
 
     val ans = backtrack() / 8
