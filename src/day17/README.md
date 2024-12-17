@@ -80,19 +80,15 @@ The backtracking solution:
 
 ```kotlin
 fun backtrack(a: Long = 0L, index: Int = program.lastIndex): Long {
-    if (index < 0) return a
-    val result = mutableListOf<Long>()
-    for (mod8 in 0..7) {
-        var b = mod8
-        b = b xor 2
-        val c = (a + mod8) / (1 shl b)
-        b = b xor 7
-        b = b xor (c % 8).toInt()
-        if (b == program[index]) {
-            result += backtrack((a + mod8) * 8, index - 1)
-        }
-    }
-    return if (result.isNotEmpty()) result.min() else Long.MAX_VALUE
+   if (index < 0) return a
+   val result = mutableListOf<Long>()
+   for (mod8 in 0..7) {
+      val performResult = perform(a + mod8, 0L, 0L, program)
+      if (performResult.first() == program[index]) {
+         result += backtrack((a + mod8) * 8, index - 1)
+      }
+   }
+   return result.minOrNull() ?: Long.MAX_VALUE
 }
 ```
 
@@ -107,15 +103,8 @@ fun backtrack(a: Long = 0L, index: Int = program.lastIndex): Long {
     - Adding the current 3-bit value
 
 ### Why It's Input-Specific:
-1. Assumes fixed transformation pattern:
-   ```
-   b = mod8
-   b = b xor 2
-   c = (a + mod8) / (1 << b)
-   b = b xor 7
-   b = b xor (c % 8)
-   ```
-2. Depends on specific XOR transformations
+1. Program always outputs B register
+2. A is divided by 8 each time
 
 ## Testing Strategy
 
