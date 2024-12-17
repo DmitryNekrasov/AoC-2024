@@ -5,7 +5,7 @@ import println
 import readInput
 
 fun List<String>.parse() =
-    take(3).map { it.split(": ").last().toInt() } to last().split(": ").last().split(",").map(String::toInt)
+    take(3).map { it.split(": ").last().toLong() } to last().split(": ").last().split(",").map(String::toInt)
 
 const val MOD = 8
 
@@ -18,7 +18,7 @@ const val OUT = 5
 const val BDV = 6
 const val CDV = 7
 
-fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
+fun perform(aReg: Long, bReg: Long, cReg: Long, program: List<Int>): List<Int> {
     var aReg = aReg
     var bReg = bReg
     var cReg = cReg
@@ -31,7 +31,7 @@ fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
         val literalOperand = program[pc + 1]
         val comboOperand = lazy {
             when (literalOperand) {
-                in 0..3 -> literalOperand
+                in 0..3 -> literalOperand.toLong()
                 4 -> aReg
                 5 -> bReg
                 6 -> cReg
@@ -39,7 +39,7 @@ fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
             }
         }
 
-        fun dv() = aReg / (1 shl comboOperand.value)
+        fun dv() = aReg / (1 shl comboOperand.value.toInt())
 
         when (opcode) {
             ADV -> {
@@ -48,7 +48,7 @@ fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
             }
 
             BXL -> {
-                bReg = bReg xor literalOperand
+                bReg = bReg xor literalOperand.toLong()
                 pc += 2
             }
 
@@ -58,7 +58,7 @@ fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
             }
 
             JNZ -> {
-                if (aReg != 0) {
+                if (aReg != 0L) {
                     pc = literalOperand
                 } else {
                     pc += 2
@@ -71,7 +71,7 @@ fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
             }
 
             OUT -> {
-                output += comboOperand.value % MOD
+                output += (comboOperand.value % MOD).toInt()
                 pc += 2
             }
 
@@ -93,12 +93,28 @@ fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
     return output
 }
 
-fun part1(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
+fun part1(aReg: Long, bReg: Long, cReg: Long, program: List<Int>): String {
     return perform(aReg, bReg, cReg, program).joinToString(",")
 }
 
-fun part2(program: List<Int>): Int {
-    return -1
+fun part2(program: List<Int>): Long {
+    fun backtrack(a: Long, index: Int): Long {
+        if (index < 0) return a
+        val result = mutableListOf<Long>()
+        for (mod8 in 0..7) {
+            var b = mod8
+            b = b xor 2
+            val c = (a + mod8) / (1 shl b)
+            b = b xor 7
+            b = b xor (c % 8).toInt()
+            if (b == program[index]) {
+                result += backtrack((a + mod8) * 8, index - 1)
+            }
+        }
+        return if (result.isNotEmpty()) result.min() else Long.MAX_VALUE
+    }
+
+    return backtrack(0L, program.lastIndex) / 8
 }
 
 fun main() {
