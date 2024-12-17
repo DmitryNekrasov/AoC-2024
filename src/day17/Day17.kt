@@ -98,7 +98,7 @@ fun part1(aReg: Long, bReg: Long, cReg: Long, program: List<Int>): String {
 }
 
 fun part2(program: List<Int>): Long {
-    fun backtrack(a: Long, index: Int): Long {
+    fun backtrack(a: Long = 0L, index: Int = program.lastIndex): Long {
         if (index < 0) return a
         val result = mutableListOf<Long>()
         for (mod8 in 0..7) {
@@ -114,7 +114,7 @@ fun part2(program: List<Int>): Long {
         return if (result.isNotEmpty()) result.min() else Long.MAX_VALUE
     }
 
-    return backtrack(0L, program.lastIndex) / 8
+    return backtrack() / 8
 }
 
 fun main() {
