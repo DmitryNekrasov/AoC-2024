@@ -42,50 +42,14 @@ fun perform(aReg: Long, bReg: Long, cReg: Long, program: List<Int>): List<Int> {
         fun dv() = aReg / (1 shl comboOperand.value.toInt())
 
         when (opcode) {
-            ADV -> {
-                aReg = dv()
-                pc += 2
-            }
-
-            BXL -> {
-                bReg = bReg xor literalOperand.toLong()
-                pc += 2
-            }
-
-            BST -> {
-                bReg = comboOperand.value % MOD
-                pc += 2
-            }
-
-            JNZ -> {
-                if (aReg != 0L) {
-                    pc = literalOperand
-                } else {
-                    pc += 2
-                }
-            }
-
-            BXC -> {
-                bReg = bReg xor cReg
-                pc += 2
-            }
-
-            OUT -> {
-                output += (comboOperand.value % MOD).toInt()
-                pc += 2
-            }
-
-            BDV -> {
-                bReg = dv()
-                pc += 2
-            }
-
-            CDV -> {
-                cReg = dv()
-                pc += 2
-
-            }
-
+            ADV -> { aReg = dv(); pc += 2 }
+            BXL -> { bReg = bReg xor literalOperand.toLong(); pc += 2 }
+            BST -> { bReg = comboOperand.value % MOD; pc += 2 }
+            JNZ -> pc = if (aReg != 0L) literalOperand else pc + 2
+            BXC -> { bReg = bReg xor cReg; pc += 2 }
+            OUT -> { output += (comboOperand.value % MOD).toInt(); pc += 2 }
+            BDV -> { bReg = dv(); pc += 2 }
+            CDV -> { cReg = dv(); pc += 2 }
             else -> throw RuntimeException("Should not reach here")
         }
     }
