@@ -18,6 +18,8 @@ const val OUT = 5
 const val BDV = 6
 const val CDV = 7
 
+const val OUTPUT_LIMIT = 18
+
 fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
     var aReg = aReg
     var bReg = bReg
@@ -88,17 +90,33 @@ fun perform(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): List<Int> {
 
             else -> throw RuntimeException("Should not reach here")
         }
+
+        if (output.size > OUTPUT_LIMIT) {
+            break
+        }
     }
 
     return output
+}
+
+fun check(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): Boolean {
+    return perform(aReg, bReg, cReg, program) == program
 }
 
 fun part1(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
     return perform(aReg, bReg, cReg, program).joinToString(",")
 }
 
-fun part2(aReg: Int, bReg: Int, cReg: Int, program: List<Int>): String {
-    return ""
+fun part2(bReg: Int, cReg: Int, program: List<Int>): Int {
+    var a = 0
+    while (!check(a, bReg, cReg, program)) {
+        if (a % 1_000_000 == 0) {
+            println("A = $a")
+        }
+        a++
+        if (a < 0) break
+    }
+    return a
 }
 
 fun main() {
@@ -106,23 +124,24 @@ fun main() {
         val (registers, program) = readInput("Day17_test01").parse()
         val (aReg, bReg, cReg) = registers
 
-        run {
-            val expected = "4,6,3,5,6,3,5,2,1,0"
-            val actual = part1(aReg, bReg, cReg, program)
-            assertEquals(expected, actual)
-        }
+        val expected = "4,6,3,5,6,3,5,2,1,0"
+        val actual = part1(aReg, bReg, cReg, program)
+        assertEquals(expected, actual)
+    }
 
-        run {
-            val expected = "^_^"
-            val actual = part2(aReg, bReg, cReg, program)
-            assertEquals(expected, actual)
-        }
+    run {
+        val (registers, program) = readInput("Day17_test02").parse()
+        val (_, bReg, cReg) = registers
+
+        val expected = 117440
+        val actual = part2(bReg, cReg, program)
+        assertEquals(expected, actual)
     }
 
     run {
         val (registers, program) = readInput("Day17").parse()
         val (aReg, bReg, cReg) = registers
         part1(aReg, bReg, cReg, program).println()
-        part2(aReg, bReg, cReg, program).println()
+        part2(bReg, cReg, program).println()
     }
 }
