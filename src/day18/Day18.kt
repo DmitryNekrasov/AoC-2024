@@ -39,8 +39,14 @@ fun part1(n: Int, limit: Int, points: List<Pair<Int, Int>>): Int {
     return distance(n, limit, points)
 }
 
-fun part2(points: List<Pair<Int, Int>>): Int {
-    return points.size
+fun part2(n: Int, points: List<Pair<Int, Int>>): String {
+    fun binSearch(left: Int = 0, right: Int = points.size): Int {
+        if (left >= right) return right
+        val mid = left + (right - left) / 2
+        return if (distance(n, mid, points) == -1) binSearch(left, mid) else binSearch(mid + 1, right)
+    }
+
+    return points[binSearch() - 1].let { (x, y) -> "$x,$y" }
 }
 
 fun main() {
@@ -56,8 +62,8 @@ fun main() {
         }
 
         run {
-            val expected = -1
-            val actual = part2(points)
+            val expected = "6,1"
+            val actual = part2(n, points)
             assertEquals(expected, actual)
         }
     }
@@ -68,6 +74,6 @@ fun main() {
         val points = readInput("Day18").parse()
 
         part1(n, limit, points).println()
-        part2(points).println()
+        part2(n, points).println()
     }
 }
