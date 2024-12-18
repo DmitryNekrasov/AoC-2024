@@ -92,6 +92,6 @@ fun binSearch(left: Int = 0, right: Int = points.size): Int {
     - Each iteration runs BFS taking $$O(n^2)$$
 - Space Complexity: $$O(n^2)$$
     - Same as Part 1
-    - Binary search uses $$O(1)$ additional space
+    - Binary search uses $$O(1)$$ additional space
 
 The overall solution is efficient for the given constraints (n=71) and handles both parts effectively using standard graph algorithms combined with binary search optimization.
