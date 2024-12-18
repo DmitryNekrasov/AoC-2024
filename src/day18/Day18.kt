@@ -8,7 +8,7 @@ import java.util.Queue
 
 fun List<String>.parse() = map { it.split(",").map(String::toInt).let { (x, y) -> x to y } }
 
-fun part1(n: Int, limit: Int, points: List<Pair<Int, Int>>): Int {
+fun distance(n: Int, limit: Int, points: List<Pair<Int, Int>>): Int {
     val grid = Array(n) { CharArray(n) { '.' } }
     for (i in 0..<limit) {
         val (x, y) = points[i]
@@ -32,7 +32,11 @@ fun part1(n: Int, limit: Int, points: List<Pair<Int, Int>>): Int {
         }
     }
 
-    throw RuntimeException("Should not reach here")
+    return -1
+}
+
+fun part1(n: Int, limit: Int, points: List<Pair<Int, Int>>): Int {
+    return distance(n, limit, points)
 }
 
 fun part2(points: List<Pair<Int, Int>>): Int {
