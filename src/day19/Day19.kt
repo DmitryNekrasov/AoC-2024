@@ -37,8 +37,22 @@ fun part1(patterns: List<String>, designs: List<String>): Int {
     return designs.count { it.backtrack() }
 }
 
-fun part2(patterns: List<String>, designs: List<String>): Int {
-    return patterns.size
+fun part2(patterns: List<String>, designs: List<String>): Long {
+    val hashDict = patterns.groupBy { it.length }
+        .mapValues { (_, fixedLenPatterns) -> fixedLenPatterns.map(String::hash).toSet() }
+
+    val maxPatternLen = hashDict.keys.max()
+    val cache = HashMap<Int, Long>()
+
+    fun String.backtrack(from: Int = 0): Long {
+        if (from == length) return 1L
+        return cache.getOrPut(from) {
+            hashes(from, min(from + maxPatternLen, length)).withIndex()
+                .sumOf { (index, hash) -> if (hash in hashDict[index + 1]!!) backtrack(from + index + 1) else 0L }
+        }
+    }
+
+    return designs.sumOf { it.backtrack() }
 }
 
 fun main() {
@@ -52,7 +66,7 @@ fun main() {
         }
 
         run {
-            val expected = -1
+            val expected = 16L
             val actual = part2(patterns, designs)
             assertEquals(expected, actual)
         }
