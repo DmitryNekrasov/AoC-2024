@@ -1,7 +1,5 @@
 # Day 19: Linen Layout
 
-Here's a detailed analysis of the solution:
-
 ## Intuition
 The problem is essentially about pattern matching and counting combinations. For part 1, we need to determine if a design can be created using available patterns, while part 2 requires counting all possible ways to create each design.
 
