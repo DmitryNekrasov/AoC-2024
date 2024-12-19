@@ -52,7 +52,7 @@ fun part2(patterns: List<String>, designs: List<String>): Long {
         }
     }
 
-    return designs.sumOf { it.backtrack() }
+    return designs.sumOf { it.backtrack().also { cache.clear() } }
 }
 
 fun main() {
