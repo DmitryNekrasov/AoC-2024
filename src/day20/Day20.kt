@@ -86,10 +86,6 @@ fun solve(grid: List<CharArray>, limit: Int, maxSteps: Int): Int {
     return result
 }
 
-fun part2(grid: List<CharArray>): Int {
-    return grid.size
-}
-
 fun main() {
     run {
         val input = readInput("Day20_test01").map { it.toCharArray() }
