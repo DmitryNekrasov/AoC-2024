@@ -42,7 +42,7 @@ fun List<CharArray>.distances(start: Pair<Int, Int>, end: Pair<Int, Int>): Array
     return distances
 }
 
-fun part1(grid: List<CharArray>, limit: Int): Int {
+fun solve(grid: List<CharArray>, limit: Int, maxSteps: Int): Int {
     val start = grid.get('S')
     val end = grid.get('E')
     val distances = grid.distances(start, end)
@@ -63,26 +63,24 @@ fun part1(grid: List<CharArray>, limit: Int): Int {
         throw RuntimeException("Should not reach here")
     }
 
-    val steps = 2
     var result = 0
-
     var position = start
     do {
         val (i, j) = position
-
-        for (k in -steps..steps) {
-            val left = steps - abs(k)
-            val right = -left
-            for (l in if (left == right) listOf(left) else listOf(left, right)) {
-                if (i + k in 0..<n && j + l in 0..<m) {
-                    val save = distances[i + k][j + l] - distances[i][j] - steps
-                    if (save >= limit) {
-                        result++
+        for (steps in 2..maxSteps) {
+            for (k in -steps..steps) {
+                val left = steps - abs(k)
+                val right = -left
+                for (l in if (left == right) listOf(left) else listOf(left, right)) {
+                    if (i + k in 0..<n && j + l in 0..<m) {
+                        val save = distances[i + k][j + l] - distances[i][j] - steps
+                        if (save >= limit) {
+                            result++
+                        }
                     }
                 }
             }
         }
-
         position = position.next()
     } while (position != end)
 
@@ -99,20 +97,20 @@ fun main() {
 
         run {
             val expected = 8
-            val actual = part1(input, 12)
+            val actual = solve(input, 12, 2)
             assertEquals(expected, actual)
         }
 
         run {
-            val expected = -1
-            val actual = part2(input)
+            val expected = 285
+            val actual = solve(input, 50, 20)
             assertEquals(expected, actual)
         }
     }
 
     run {
         val input = readInput("Day20").map { it.toCharArray() }
-        part1(input, 100).println()
-        part2(input).println()
+        solve(input, 100, 2).println()
+        solve(input, 100, 20).println()
     }
 }
