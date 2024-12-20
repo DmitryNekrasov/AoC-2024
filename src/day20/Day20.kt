@@ -69,7 +69,7 @@ fun solve(grid: List<CharArray>, limit: Int, maxSteps: Int): Int {
         val (i, j) = position
         for (steps in 2..maxSteps) {
             for (k in -steps..steps) {
-                val left = steps - abs(k)
+                val left = abs(k) - steps
                 val right = -left
                 for (l in if (left == right) listOf(left) else listOf(left, right)) {
                     if (i + k in 0..<n && j + l in 0..<m) {
