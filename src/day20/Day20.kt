@@ -5,6 +5,7 @@ import println
 import readInput
 import java.util.LinkedList
 import java.util.Queue
+import kotlin.math.abs
 
 fun List<CharArray>.get(c: Char): Pair<Int, Int> {
     for (i in indices) {
@@ -17,48 +18,75 @@ fun List<CharArray>.get(c: Char): Pair<Int, Int> {
     throw RuntimeException("Should not reach here")
 }
 
-fun List<CharArray>.distance(start: Pair<Int, Int>, end: Pair<Int, Int>): Int {
+const val INF = 1_000_000_000
+
+fun List<CharArray>.distances(start: Pair<Int, Int>, end: Pair<Int, Int>): Array<IntArray> {
     val n = size
     val m = first().size
-    val visited = Array(n) { BooleanArray(m) }
+    val distances = Array(n) { IntArray(m) { -INF } }
     val queue: Queue<List<Int>> = LinkedList()
     val (startI, startJ) = start
     queue.offer(listOf(startI, startJ, 0))
-    visited[startI][startJ] = true
+    distances[startI][startJ] = 0
     while (queue.isNotEmpty()) {
         val (i, j, distance) = queue.poll()
-        if (i to j == end) return distance
         for ((di, dj) in listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)) {
             val nextI = i + di
             val nextJ = j + dj
-            if (nextI in 0..<n && nextJ in 0..<m && this[nextI][nextJ] != '#' && !visited[nextI][nextJ]) {
-                visited[nextI][nextJ] = true
+            if (nextI in 0..<n && nextJ in 0..<m && this[nextI][nextJ] != '#' && distances[nextI][nextJ] == -INF) {
+                distances[nextI][nextJ] = distance + 1
                 queue.offer(listOf(nextI, nextJ, distance + 1))
             }
         }
     }
-    throw RuntimeException("Should not reach here")
+    return distances
 }
 
 fun part1(grid: List<CharArray>, limit: Int): Int {
     val start = grid.get('S')
     val end = grid.get('E')
-    val initialDistance = grid.distance(start, end)
+    val distances = grid.distances(start, end)
 
     val n = grid.size
     val m = grid.first().size
-    val distances = mutableListOf<Int>()
-    for (i in 1..<grid.lastIndex) {
-        for (j in 1..<grid.first().lastIndex) {
-            if (grid[i][j] == '#') {
-                grid[i][j] = '.'
-                distances += grid.distance(start, end)
-                grid[i][j] = '#'
+    val visited = Array(n) { BooleanArray(m) }
+
+    fun Pair<Int, Int>.next(): Pair<Int, Int> {
+        for ((di, dj) in listOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)) {
+            val nextI = first + di
+            val nextJ = second + dj
+            if (grid[nextI][nextJ] != '#' && !visited[nextI][nextJ]) {
+                visited[first][second] = true
+                return nextI to nextJ
             }
         }
+        throw RuntimeException("Should not reach here")
     }
 
-    return distances.count { initialDistance - it >= limit }
+    val steps = 2
+    var result = 0
+
+    var position = start
+    do {
+        val (i, j) = position
+
+        for (k in -steps..steps) {
+            val left = steps - abs(k)
+            val right = -left
+            for (l in if (left == right) listOf(left) else listOf(left, right)) {
+                if (i + k in 0..<n && j + l in 0..<m) {
+                    val save = distances[i + k][j + l] - distances[i][j] - steps
+                    if (save >= limit) {
+                        result++
+                    }
+                }
+            }
+        }
+
+        position = position.next()
+    } while (position != end)
+
+    return result
 }
 
 fun part2(grid: List<CharArray>): Int {
