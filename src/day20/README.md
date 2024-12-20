@@ -57,7 +57,7 @@ fun Pair<Int, Int>.next(): Pair<Int, Int>
     - For each position on path ($$O(P)$$ where P is path length (N * M)):
         - For each possible cheat length ($$O(maxSteps)$$)
             - For each possible direction within cheat range ($$O(maxSteps)$$)
-    - Total: $$O(N * M + N * M * maxSteps^2)$$
+    - Total: $$O(N * M * maxSteps^2)$$
 
 ### Space Complexity
 - Distance Matrix: $$O(N * M)$$
