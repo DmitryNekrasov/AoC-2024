@@ -20,7 +20,7 @@ fun List<CharArray>.get(c: Char): Pair<Int, Int> {
 
 const val INF = 1_000_000_000
 
-fun List<CharArray>.distances(start: Pair<Int, Int>, end: Pair<Int, Int>): Array<IntArray> {
+fun List<CharArray>.distances(start: Pair<Int, Int>): Array<IntArray> {
     val n = size
     val m = first().size
     val distances = Array(n) { IntArray(m) { -INF } }
@@ -45,7 +45,7 @@ fun List<CharArray>.distances(start: Pair<Int, Int>, end: Pair<Int, Int>): Array
 fun solve(grid: List<CharArray>, limit: Int, maxSteps: Int): Int {
     val start = grid.get('S')
     val end = grid.get('E')
-    val distances = grid.distances(start, end)
+    val distances = grid.distances(start)
     val n = grid.size
     val m = grid.first().size
     val visited = Array(n) { BooleanArray(m) }
