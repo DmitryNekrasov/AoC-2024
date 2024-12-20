@@ -103,9 +103,18 @@ fun main() {
         }
     }
 
+
     run {
         val input = readInput("Day20").map { it.toCharArray() }
-        solve(input, 100, 2).println()
-        solve(input, 100, 20).println()
+
+        val start = System.nanoTime()
+        val part1 = solve(input, 100, 2)
+        val part2 = solve(input, 100, 20)
+        val end = System.nanoTime()
+
+        part1.println()
+        part2.println()
+
+        println("time = ${(end.toDouble() - start) / 1_000_000} ms")
     }
 }
