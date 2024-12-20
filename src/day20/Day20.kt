@@ -46,7 +46,6 @@ fun solve(grid: List<CharArray>, limit: Int, maxSteps: Int): Int {
     val start = grid.get('S')
     val end = grid.get('E')
     val distances = grid.distances(start, end)
-
     val n = grid.size
     val m = grid.first().size
     val visited = Array(n) { BooleanArray(m) }
