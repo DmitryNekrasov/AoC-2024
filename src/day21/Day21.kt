@@ -4,7 +4,7 @@ import assertEquals
 import println
 import readInput
 
-data class Vertex(val up: Long, val down: Long, val left: Long, val right: Long)
+data class Vertex(val up: Long, val down: Long, val left: Long, val right: Long, val a: Long)
 
 fun HashMap<Long, MutableList<Long>>.add(from: Long, to: Long) {
     getOrPut(from) { mutableListOf() } += to
@@ -25,7 +25,7 @@ fun part1(input: List<String>): Int {
 
     fun buildVertex(depth: Int, id: Long): Vertex {
         if (depth == 0) {
-            return Vertex(id, id, id, id)
+            return Vertex(id, id, id, id, id)
         }
 
         val a = buildVertex(depth - 1, id * 5 + deltaA)
@@ -45,19 +45,40 @@ fun part1(input: List<String>): Int {
         graph.add(right.up, a.up)
         graph.add(a.down, right.down)
 
-        return Vertex(up.up, down.down, left.left, right.right)
+        return Vertex(up.up, down.down, left.left, right.right, a.a)
     }
 
     val numpadVertices = (0..10).associateWith { buildVertex(depth, it.toLong()) }
-
-    println(numpadVertices)
-
     val numpad = listOf(
         listOf(7, 8, 9),
         listOf(4, 5, 6),
         listOf(1, 2, 3),
         listOf(EMPTY, 0, 10)
     )
+    for (i in numpad.indices) {
+        for (j in numpad.first().indices) {
+            if (numpad[i][j] == EMPTY) continue
+            val current = numpadVertices[numpad[i][j]]!!
+            if (i - 1 >= 0) {
+                val up = numpadVertices[numpad[i - 1][j]]!!
+                graph.add(current.up, up.up)
+            }
+            if (i + 1 < numpad.size && numpad[i + 1][j] != EMPTY) {
+                val down = numpadVertices[numpad[i + 1][j]]!!
+                graph.add(current.down, down.down)
+            }
+            if (j - 1 >= 0 && numpad[i][j - 1] != EMPTY) {
+                val left = numpadVertices[numpad[i][j - 1]]!!
+                graph.add(current.left, left.left)
+            }
+            if (j + 1 < numpad.first().size) {
+                val right = numpadVertices[numpad[i][j + 1]]!!
+                graph.add(current.right, right.right)
+            }
+        }
+    }
+
+    println(graph)
 
     return input.size
 }
