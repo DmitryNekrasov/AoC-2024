@@ -3,6 +3,8 @@ package day21
 import assertEquals
 import println
 import readInput
+import java.util.LinkedList
+import java.util.Queue
 
 const val EMPTY = -1
 const val A = 10
@@ -19,6 +21,25 @@ data class Vertex(val up: Long, val down: Long, val left: Long, val right: Long,
 
 fun HashMap<Long, MutableList<Long>>.add(from: Long, to: Long) {
     getOrPut(from) { mutableListOf() } += to
+}
+
+fun HashMap<Long, MutableList<Long>>.distance(start: Long, end: Long): Int {
+    val queue: Queue<Pair<Long, Int>> = LinkedList()
+    queue.offer(start to 0)
+    val visited = mutableSetOf(start)
+    while (queue.isNotEmpty()) {
+        val (from, distance) = queue.poll()
+        if (from == end) return distance
+        this[from]?.also { neighbors ->
+            for (to in neighbors) {
+                if (to !in visited) {
+                    visited += to
+                    queue.offer(to to distance + 1)
+                }
+            }
+        }
+    }
+    error("Should not reach here")
 }
 
 fun part1(input: List<List<Int>>): Int {
@@ -95,7 +116,7 @@ fun main() {
         val input = readInput("Day21_test01").parse()
 
         run {
-            val expected = 126384L
+            val expected = 126384
             val actual = part1(input)
             assertEquals(expected, actual)
         }
