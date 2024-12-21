@@ -10,7 +10,17 @@ fun HashMap<Long, MutableList<Long>>.add(from: Long, to: Long) {
     getOrPut(from) { mutableListOf() } += to
 }
 
+const val EMPTY = -1
+
+const val deltaA = 0
+const val deltaUP = 1
+const val deltaDOWN = 2
+const val deltaLEFT = 3
+const val deltaRIGHT = 4
+
 fun part1(input: List<String>): Int {
+    val depth = 2
+
     val graph = HashMap<Long, MutableList<Long>>()
 
     fun buildVertex(depth: Int, id: Long): Vertex {
@@ -18,11 +28,11 @@ fun part1(input: List<String>): Int {
             return Vertex(id, id, id, id)
         }
 
-        val a = buildVertex(depth - 1, id * 5)
-        val up = buildVertex(depth - 1, id * 5 + 1)
-        val down = buildVertex(depth - 1, id * 5 + 2)
-        val left = buildVertex(depth - 1, id * 5 + 3)
-        val right = buildVertex(depth - 1, id * 5 + 4)
+        val a = buildVertex(depth - 1, id * 5 + deltaA)
+        val up = buildVertex(depth - 1, id * 5 + deltaUP)
+        val down = buildVertex(depth - 1, id * 5 + deltaDOWN)
+        val left = buildVertex(depth - 1, id * 5 + deltaLEFT)
+        val right = buildVertex(depth - 1, id * 5 + deltaRIGHT)
 
         graph.add(left.right, down.right)
         graph.add(down.left, left.left)
@@ -37,6 +47,17 @@ fun part1(input: List<String>): Int {
 
         return Vertex(up.up, down.down, left.left, right.right)
     }
+
+    val numpadVertices = (0..10).associateWith { buildVertex(depth, it.toLong()) }
+
+    println(numpadVertices)
+
+    val numpad = listOf(
+        listOf(7, 8, 9),
+        listOf(4, 5, 6),
+        listOf(1, 2, 3),
+        listOf(EMPTY, 0, 10)
+    )
 
     return input.size
 }
