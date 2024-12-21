@@ -4,13 +4,8 @@ import assertEquals
 import println
 import readInput
 
-data class Vertex(val up: Long, val down: Long, val left: Long, val right: Long, val a: Long)
-
-fun HashMap<Long, MutableList<Long>>.add(from: Long, to: Long) {
-    getOrPut(from) { mutableListOf() } += to
-}
-
 const val EMPTY = -1
+const val A = 10
 
 const val deltaA = 0
 const val deltaUP = 1
@@ -18,7 +13,15 @@ const val deltaDOWN = 2
 const val deltaLEFT = 3
 const val deltaRIGHT = 4
 
-fun part1(input: List<String>): Int {
+fun List<String>.parse() = map { it.toCharArray().map { c -> if (c == 'A') A else c.digitToInt() } }
+
+data class Vertex(val up: Long, val down: Long, val left: Long, val right: Long, val a: Long)
+
+fun HashMap<Long, MutableList<Long>>.add(from: Long, to: Long) {
+    getOrPut(from) { mutableListOf() } += to
+}
+
+fun part1(input: List<List<Int>>): Int {
     val depth = 2
 
     val graph = HashMap<Long, MutableList<Long>>()
@@ -48,12 +51,12 @@ fun part1(input: List<String>): Int {
         return Vertex(up.up, down.down, left.left, right.right, a.a)
     }
 
-    val numpadVertices = (0..10).associateWith { buildVertex(depth, it.toLong()) }
+    val numpadVertices = (0..A).associateWith { buildVertex(depth, it.toLong()) }
     val numpad = listOf(
         listOf(7, 8, 9),
         listOf(4, 5, 6),
         listOf(1, 2, 3),
-        listOf(EMPTY, 0, 10)
+        listOf(EMPTY, 0, A)
     )
     for (i in numpad.indices) {
         for (j in numpad.first().indices) {
@@ -83,16 +86,16 @@ fun part1(input: List<String>): Int {
     return input.size
 }
 
-fun part2(input: List<String>): Int {
+fun part2(input: List<List<Int>>): Int {
     return input.size
 }
 
 fun main() {
     run {
-        val input = readInput("Day21_test01")
+        val input = readInput("Day21_test01").parse()
 
         run {
-            val expected = -1
+            val expected = 126384L
             val actual = part1(input)
             assertEquals(expected, actual)
         }
@@ -105,7 +108,7 @@ fun main() {
     }
 
     run {
-        val input = readInput("Day21")
+        val input = readInput("Day21").parse()
         part1(input).println()
         part2(input).println()
     }
