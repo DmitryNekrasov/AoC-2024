@@ -25,7 +25,7 @@ fun HashMap<Long, MutableList<Long>>.add(from: Long, to: Long) {
 
 fun HashMap<Long, MutableList<Long>>.distance(start: Long, end: Long): Int {
     val queue: Queue<Pair<Long, Int>> = LinkedList()
-    queue.offer(start to 0)
+    queue.offer(start to 1)
     val visited = mutableSetOf(start)
     while (queue.isNotEmpty()) {
         val (from, distance) = queue.poll()
@@ -103,6 +103,13 @@ fun part1(input: List<List<Int>>): Int {
     }
 
     println(graph)
+
+    for (code in input) {
+        val sum = (listOf(A) + code).zipWithNext().sumOf {
+            (start, end) -> graph.distance(numpadVertices[start]!!.a, numpadVertices[end]!!.a)
+        }
+        println("code = $code, sum = $sum")
+    }
 
     return input.size
 }
