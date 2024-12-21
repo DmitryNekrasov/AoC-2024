@@ -73,12 +73,15 @@ fun part1(input: List<List<Int>>): Int {
     }
 
     val numpadVertices = (0..A).associateWith { buildVertex(depth, it.toLong()) }
+    println("numpadVertices = $numpadVertices")
+
     val numpad = listOf(
         listOf(7, 8, 9),
         listOf(4, 5, 6),
         listOf(1, 2, 3),
         listOf(EMPTY, 0, A)
     )
+
     for (i in numpad.indices) {
         for (j in numpad.first().indices) {
             if (numpad[i][j] == EMPTY) continue
@@ -102,7 +105,7 @@ fun part1(input: List<List<Int>>): Int {
         }
     }
 
-    println(graph)
+    println("graph = $graph")
 
     for (code in input) {
         val sum = (listOf(A) + code).zipWithNext().sumOf {
