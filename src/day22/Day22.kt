@@ -54,9 +54,7 @@ fun main() {
         }
 
         run {
-            val expected = -1
-            val actual = part2(input)
-            assertEquals(expected, actual)
+            part2(input).println()
         }
     }
 
