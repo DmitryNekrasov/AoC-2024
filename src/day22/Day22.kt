@@ -4,17 +4,17 @@ import assertEquals
 import println
 import readInput
 
-fun part1(input: List<String>): Int {
+fun part1(input: List<Int>): Int {
     return input.size
 }
 
-fun part2(input: List<String>): Int {
+fun part2(input: List<Int>): Int {
     return input.size
 }
 
 fun main() {
     run {
-        val input = readInput("Day22_test01")
+        val input = readInput("Day22_test01").map(String::toInt)
 
         run {
             val expected = -1
@@ -30,7 +30,7 @@ fun main() {
     }
 
     run {
-        val input = readInput("Day22")
+        val input = readInput("Day22").map(String::toInt)
         part1(input).println()
         part2(input).println()
     }
