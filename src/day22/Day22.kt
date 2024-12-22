@@ -17,12 +17,30 @@ fun Long.nextSecretNumber(): Long {
     return step3
 }
 
+const val MAX_SIZE = 2000
+
 fun part1(nums: List<Long>): Long {
     return nums.sumOf { num -> (0..<2000).fold(num) { acc, _ -> acc.nextSecretNumber() } }
 }
 
-fun part2(input: List<Long>): Int {
-    return input.size
+fun part2(nums: List<Long>): Int {
+    val changes = HashMap<List<Int>, Int>()
+    for (num in nums) {
+        val changesForNum = HashMap<List<Int>, Int>()
+        val secretNumbers = (0..<MAX_SIZE).runningFold(num) { acc, _ -> acc.nextSecretNumber() }
+        val prices = secretNumbers.map { (it % 10).toInt() }
+        val diffs = prices.zipWithNext().map { (a, b) -> b - a }
+        for ((index, change) in diffs.windowed(4).withIndex()) {
+            if (change !in changesForNum) {
+                changesForNum[change] = prices[index + 4]
+            }
+        }
+        for ((change, maxPrice) in changesForNum) {
+            changes[change] = (changes[change] ?: 0) + maxPrice
+        }
+    }
+
+    return changes.values.max()
 }
 
 fun main() {
