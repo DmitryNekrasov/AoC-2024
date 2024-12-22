@@ -69,7 +69,7 @@ fun part1(input: List<List<Int>>): Int {
         graph.add(right.up, a.up)
         graph.add(a.down, right.down)
 
-        return Vertex(up.up, down.down, left.left, right.right, a.a)
+        return Vertex(up.a, down.a, left.a, right.a, a.a)
     }
 
     val numpadVertices = (0..A).associateWith { buildVertex(depth, it.toLong()) }
