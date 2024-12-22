@@ -6,6 +6,7 @@ import readInput
 import shouldNotReachHere
 import java.util.LinkedList
 import java.util.Queue
+import kotlin.math.abs
 
 const val EMPTY = -1
 const val A = 10
@@ -134,11 +135,44 @@ fun List<List<Int>>.getCoordinates(num: Int): Pair<Int, Int> {
     shouldNotReachHere()
 }
 
+const val UP = 'u'
+const val DOWN = 'd'
+const val LEFT = 'l'
+const val RIGHT = 'r'
+
+fun List<List<Int>>.generateAllPossiblePaths(start: Pair<Int, Int>, end: Pair<Int, Int>, distance: Int): List<String> {
+    val n = size
+    val m = first().size
+    val visited = Array(n) { BooleanArray(m) }
+    val result = mutableListOf<String>()
+
+    fun dfs(i: Int, j: Int, currentDistance: Int = 0, currentPath: String = "") {
+        if (i !in 0..<n || j !in 0..<m || visited[i][j] || this[i][j] == EMPTY) return
+        if (currentDistance == distance && i to j == end) result += currentPath
+        visited[i][j] = true
+        dfs(i - 1, j, currentDistance + 1, "$currentPath$UP")
+        dfs(i + 1, j, currentDistance + 1, "$currentPath$DOWN")
+        dfs(i, j - 1, currentDistance + 1, "$currentPath$LEFT")
+        dfs(i, j + 1, currentDistance + 1, "$currentPath$RIGHT")
+        visited[i][j] = false
+    }
+
+    dfs(start.first, start.second)
+
+    return result
+}
+
+infix fun Pair<Int, Int>.manhattanDistance(rhs: Pair<Int, Int>) = abs(first - rhs.first) + abs(second - rhs.second)
+
 fun part2(input: List<List<Int>>): Int {
     for (code in input) {
         val coordinates = (listOf(A) + code).map { numpad.getCoordinates(it) }
+        val paths = coordinates.zipWithNext().map { (from, to) ->
+            numpad.generateAllPossiblePaths(from, to, from manhattanDistance to)
+        }
 
-        println("coordinates = $coordinates")
+        println("Paths:")
+        println(paths.joinToString("\n"))
     }
 
     return input.size
