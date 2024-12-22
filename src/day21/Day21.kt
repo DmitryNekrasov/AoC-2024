@@ -115,14 +115,11 @@ fun part1(input: List<List<Int>>): Int {
 
     println("graph = $graph")
 
-    for (code in input) {
-        val sum = (listOf(A) + code).zipWithNext().sumOf {
-            (start, end) -> graph.distance(numpadVertices[start]!!.a, numpadVertices[end]!!.a)
+    return input.sumOf { code ->
+        code.asInt() * (listOf(A) + code).zipWithNext().sumOf {
+                (start, end) -> graph.distance(numpadVertices[start]!!.a, numpadVertices[end]!!.a)
         }
-        println("code = $code, sum = $sum, value = ${code.asInt()}")
     }
-
-    return input.size
 }
 
 fun part2(input: List<List<Int>>): Int {
