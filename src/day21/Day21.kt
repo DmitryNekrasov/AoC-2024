@@ -171,6 +171,7 @@ fun part2(input: List<List<Int>>): Int {
             numpad.generateAllPossiblePaths(from, to, from manhattanDistance to)
         }
 
+        println("Code: ${code.joinToString("") { if (it == A) "A" else it.toString() }}")
         println("Paths:")
         println(paths.joinToString("\n"))
     }
