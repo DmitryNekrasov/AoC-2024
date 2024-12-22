@@ -42,6 +42,14 @@ fun HashMap<Long, MutableList<Long>>.distance(start: Long, end: Long): Int {
     error("Should not reach here")
 }
 
+fun List<Int>.asInt(): Int {
+    var result = 0
+    for (i in 0..<lastIndex) {
+        result = result * 10 + this[i]
+    }
+    return result
+}
+
 fun part1(input: List<List<Int>>): Int {
     val depth = 2
 
@@ -111,7 +119,7 @@ fun part1(input: List<List<Int>>): Int {
         val sum = (listOf(A) + code).zipWithNext().sumOf {
             (start, end) -> graph.distance(numpadVertices[start]!!.a, numpadVertices[end]!!.a)
         }
-        println("code = $code, sum = $sum")
+        println("code = $code, sum = $sum, value = ${code.asInt()}")
     }
 
     return input.size
