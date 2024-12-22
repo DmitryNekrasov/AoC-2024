@@ -51,6 +51,13 @@ fun List<Int>.asInt(): Int {
     return result
 }
 
+val numpad = listOf(
+    listOf(7, 8, 9),
+    listOf(4, 5, 6),
+    listOf(1, 2, 3),
+    listOf(EMPTY, 0, A)
+)
+
 fun part1(input: List<List<Int>>): Int {
     val depth = 2
 
@@ -83,13 +90,6 @@ fun part1(input: List<List<Int>>): Int {
 
     val numpadVertices = (0..A).associateWith { buildVertex(depth, it.toLong()) }
     println("numpadVertices = $numpadVertices")
-
-    val numpad = listOf(
-        listOf(7, 8, 9),
-        listOf(4, 5, 6),
-        listOf(1, 2, 3),
-        listOf(EMPTY, 0, A)
-    )
 
     for (i in numpad.indices) {
         for (j in numpad.first().indices) {
@@ -135,13 +135,6 @@ fun List<List<Int>>.getCoordinates(num: Int): Pair<Int, Int> {
 }
 
 fun part2(input: List<List<Int>>): Int {
-    val numpad = listOf(
-        listOf(7, 8, 9),
-        listOf(4, 5, 6),
-        listOf(1, 2, 3),
-        listOf(EMPTY, 0, A)
-    )
-
     for (code in input) {
         val coordinates = (listOf(A) + code).map { numpad.getCoordinates(it) }
 
