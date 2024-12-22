@@ -3,6 +3,7 @@ package day21
 import assertEquals
 import println
 import readInput
+import shouldNotReachHere
 import java.util.LinkedList
 import java.util.Queue
 
@@ -39,7 +40,7 @@ fun HashMap<Long, MutableList<Long>>.distance(start: Long, end: Long): Int {
             }
         }
     }
-    error("Should not reach here")
+    shouldNotReachHere()
 }
 
 fun List<Int>.asInt(): Int {
@@ -122,7 +123,31 @@ fun part1(input: List<List<Int>>): Int {
     }
 }
 
+fun List<List<Int>>.getCoordinates(num: Int): Pair<Int, Int> {
+    for (i in indices) {
+        for (j in first().indices) {
+            if (this[i][j] == num) {
+                return i to j
+            }
+        }
+    }
+    shouldNotReachHere()
+}
+
 fun part2(input: List<List<Int>>): Int {
+    val numpad = listOf(
+        listOf(7, 8, 9),
+        listOf(4, 5, 6),
+        listOf(1, 2, 3),
+        listOf(EMPTY, 0, A)
+    )
+
+    for (code in input) {
+        val coordinates = (listOf(A) + code).map { numpad.getCoordinates(it) }
+
+        println("coordinates = $coordinates")
+    }
+
     return input.size
 }
 
@@ -142,11 +167,7 @@ fun main() {
             assertEquals(expected, actual)
         }
 
-        run {
-            val expected = -1
-            val actual = part2(input)
-            assertEquals(expected, actual)
-        }
+        part2(input).println()
     }
 
     run {

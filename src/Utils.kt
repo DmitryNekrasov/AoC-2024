@@ -26,3 +26,5 @@ fun Any?.println() = println(this)
 fun <T> assertEquals(expected: T, actual: T) {
     println(if (expected == actual) "PASSED" else "FAILED, expected: $expected, but was: $actual")
 }
+
+fun shouldNotReachHere(): Nothing = error("Should not reach here")
