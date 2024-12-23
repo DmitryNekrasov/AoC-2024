@@ -157,12 +157,16 @@ fun List<String>.generateAllPossiblePaths(start: Pair<Int, Int>, end: Pair<Int, 
 
 infix fun Pair<Int, Int>.manhattanDistance(rhs: Pair<Int, Int>) = abs(first - rhs.first) + abs(second - rhs.second)
 
+fun String.prevCodesOn(keyboard: List<String>): List<List<String>> {
+    val coordinates = "A$this".map { keyboard.getCoordinates(it) }
+    return coordinates.zipWithNext().map { (from, to) ->
+        keyboard.generateAllPossiblePaths(from, to, from manhattanDistance to)
+    }
+}
+
 fun part2(input: List<String>): Int {
     for (code in input) {
-        val coordinates = "A$code".map { numpad.getCoordinates(it) }
-        val paths = coordinates.zipWithNext().map { (from, to) ->
-            numpad.generateAllPossiblePaths(from, to, from manhattanDistance to)
-        }
+        val paths = code.prevCodesOn(numpad)
 
         println("Code: $code")
         println("Paths:")
