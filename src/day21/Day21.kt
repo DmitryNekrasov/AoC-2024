@@ -170,7 +170,7 @@ fun String.prevCodesOn(keyboard: List<String>): List<List<String>> {
 }
 
 fun part2(input: List<String>): Long {
-    val maxDepth = 3
+    val maxDepth = 26
 
     val cache = HashMap<Pair<String, Int>, Long>()
 
