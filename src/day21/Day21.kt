@@ -48,6 +48,11 @@ val numpad = listOf(
     "#0A"
 )
 
+val arrows = listOf(
+    "#uA",
+    "ldr"
+)
+
 val Char.digit: Int
     get() = if (this == 'A') A else digitToInt()
 
@@ -141,7 +146,7 @@ fun List<String>.generateAllPossiblePaths(start: Pair<Int, Int>, end: Pair<Int, 
 
     fun dfs(i: Int, j: Int, currentDistance: Int = 0, currentPath: String = "") {
         if (i !in 0..<n || j !in 0..<m || visited[i][j] || this[i][j] == '#') return
-        if (currentDistance == distance && i to j == end) result += currentPath
+        if (currentDistance == distance && i to j == end) result += currentPath + "A"
         visited[i][j] = true
         dfs(i - 1, j, currentDistance + 1, "$currentPath$UP")
         dfs(i + 1, j, currentDistance + 1, "$currentPath$DOWN")
@@ -165,12 +170,20 @@ fun String.prevCodesOn(keyboard: List<String>): List<List<String>> {
 }
 
 fun part2(input: List<String>): Int {
-    for (code in input) {
-        val paths = code.prevCodesOn(numpad)
+    val maxDepth = 3
 
-        println("Code: $code")
-        println("Paths:")
-        println(paths.joinToString("\n"))
+    fun solve(code: String, depth: Int = 0): Long {
+        if (depth == maxDepth) return code.length.toLong()
+        return code.prevCodesOn(if (depth == 0) numpad else arrows).sumOf { codes ->
+            codes.minOf { code ->
+                solve(code, depth + 1)
+            }
+        }
+    }
+
+    for (code in input) {
+        val result = solve(code)
+        println("Code: $code, result = $result")
     }
 
     return input.size
