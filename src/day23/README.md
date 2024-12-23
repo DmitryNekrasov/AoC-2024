@@ -34,5 +34,5 @@ The solution implements the [Bron-Kerbosch algorithm](https://en.wikipedia.org/w
 - Space: $$O(T)$$ where T is the number of triangles found
 
 ### Part 2 (Bron-Kerbosch with pivot)
-- Time: $$O(3^(n/3))$$ in the worst case, where n is the number of vertices
+- Time: O(3^(n/3)) in the worst case, where n is the number of vertices
 - Space: $$O(n)$$ for the recursion stack and sets
