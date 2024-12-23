@@ -8,7 +8,6 @@ import java.util.LinkedList
 import java.util.Queue
 import kotlin.math.abs
 
-const val EMPTY = -1
 const val A = 10
 
 const val deltaA = 0
@@ -16,8 +15,6 @@ const val deltaUP = 1
 const val deltaDOWN = 2
 const val deltaLEFT = 3
 const val deltaRIGHT = 4
-
-fun List<String>.parse() = map { it.toCharArray().map { c -> if (c == 'A') A else c.digitToInt() } }
 
 data class Vertex(val up: Long, val down: Long, val left: Long, val right: Long, val a: Long)
 
@@ -44,22 +41,17 @@ fun HashMap<Long, MutableList<Long>>.distance(start: Long, end: Long): Int {
     shouldNotReachHere()
 }
 
-fun List<Int>.asInt(): Int {
-    var result = 0
-    for (i in 0..<lastIndex) {
-        result = result * 10 + this[i]
-    }
-    return result
-}
-
 val numpad = listOf(
-    listOf(7, 8, 9),
-    listOf(4, 5, 6),
-    listOf(1, 2, 3),
-    listOf(EMPTY, 0, A)
+    "789",
+    "456",
+    "123",
+    "#0A"
 )
 
-fun part1(input: List<List<Int>>): Int {
+val Char.digit: Int
+    get() = if (this == 'A') A else digitToInt()
+
+fun part1(input: List<String>): Int {
     val depth = 2
 
     val graph = HashMap<Long, MutableList<Long>>()
@@ -94,22 +86,22 @@ fun part1(input: List<List<Int>>): Int {
 
     for (i in numpad.indices) {
         for (j in numpad.first().indices) {
-            if (numpad[i][j] == EMPTY) continue
-            val current = numpadVertices[numpad[i][j]]!!
+            if (numpad[i][j] == '#') continue
+            val current = numpadVertices[numpad[i][j].digit]!!
             if (i - 1 >= 0) {
-                val up = numpadVertices[numpad[i - 1][j]]!!
+                val up = numpadVertices[numpad[i - 1][j].digit]!!
                 graph.add(current.up, up.up)
             }
-            if (i + 1 < numpad.size && numpad[i + 1][j] != EMPTY) {
-                val down = numpadVertices[numpad[i + 1][j]]!!
+            if (i + 1 < numpad.size && numpad[i + 1][j] != '#') {
+                val down = numpadVertices[numpad[i + 1][j].digit]!!
                 graph.add(current.down, down.down)
             }
-            if (j - 1 >= 0 && numpad[i][j - 1] != EMPTY) {
-                val left = numpadVertices[numpad[i][j - 1]]!!
+            if (j - 1 >= 0 && numpad[i][j - 1] != '#') {
+                val left = numpadVertices[numpad[i][j - 1].digit]!!
                 graph.add(current.left, left.left)
             }
-            if (j + 1 < numpad.first().size) {
-                val right = numpadVertices[numpad[i][j + 1]]!!
+            if (j + 1 < numpad.first().length) {
+                val right = numpadVertices[numpad[i][j + 1].digit]!!
                 graph.add(current.right, right.right)
             }
         }
@@ -118,16 +110,17 @@ fun part1(input: List<List<Int>>): Int {
     println("graph = $graph")
 
     return input.sumOf { code ->
-        code.asInt() * (listOf(A) + code).zipWithNext().sumOf {
-                (start, end) -> graph.distance(numpadVertices[start]!!.a, numpadVertices[end]!!.a)
-        }
+        code.substring(0..<code.lastIndex).toInt() * "A$code".map { it.digit }
+            .zipWithNext().sumOf { (start, end) ->
+                graph.distance(numpadVertices[start]!!.a, numpadVertices[end]!!.a)
+            }
     }
 }
 
-fun List<List<Int>>.getCoordinates(num: Int): Pair<Int, Int> {
+fun List<String>.getCoordinates(c: Char): Pair<Int, Int> {
     for (i in indices) {
         for (j in first().indices) {
-            if (this[i][j] == num) {
+            if (this[i][j] == c) {
                 return i to j
             }
         }
@@ -140,14 +133,14 @@ const val DOWN = 'd'
 const val LEFT = 'l'
 const val RIGHT = 'r'
 
-fun List<List<Int>>.generateAllPossiblePaths(start: Pair<Int, Int>, end: Pair<Int, Int>, distance: Int): List<String> {
+fun List<String>.generateAllPossiblePaths(start: Pair<Int, Int>, end: Pair<Int, Int>, distance: Int): List<String> {
     val n = size
-    val m = first().size
+    val m = first().length
     val visited = Array(n) { BooleanArray(m) }
     val result = mutableListOf<String>()
 
     fun dfs(i: Int, j: Int, currentDistance: Int = 0, currentPath: String = "") {
-        if (i !in 0..<n || j !in 0..<m || visited[i][j] || this[i][j] == EMPTY) return
+        if (i !in 0..<n || j !in 0..<m || visited[i][j] || this[i][j] == '#') return
         if (currentDistance == distance && i to j == end) result += currentPath
         visited[i][j] = true
         dfs(i - 1, j, currentDistance + 1, "$currentPath$UP")
@@ -164,14 +157,14 @@ fun List<List<Int>>.generateAllPossiblePaths(start: Pair<Int, Int>, end: Pair<In
 
 infix fun Pair<Int, Int>.manhattanDistance(rhs: Pair<Int, Int>) = abs(first - rhs.first) + abs(second - rhs.second)
 
-fun part2(input: List<List<Int>>): Int {
+fun part2(input: List<String>): Int {
     for (code in input) {
-        val coordinates = (listOf(A) + code).map { numpad.getCoordinates(it) }
+        val coordinates = "A$code".map { numpad.getCoordinates(it) }
         val paths = coordinates.zipWithNext().map { (from, to) ->
             numpad.generateAllPossiblePaths(from, to, from manhattanDistance to)
         }
 
-        println("Code: ${code.joinToString("") { if (it == A) "A" else it.toString() }}")
+        println("Code: $code")
         println("Paths:")
         println(paths.joinToString("\n"))
     }
@@ -187,7 +180,7 @@ fun main() {
     "<v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A".count { it == 'A' }.also { println("test5: $it") }
 
     run {
-        val input = readInput("Day21_test01").parse()
+        val input = readInput("Day21_test01")
 
         run {
             val expected = 126384
@@ -199,7 +192,7 @@ fun main() {
     }
 
     run {
-        val input = readInput("Day21").parse()
+        val input = readInput("Day21")
 
         run {
             val expected = 184716
