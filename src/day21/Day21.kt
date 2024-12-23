@@ -172,11 +172,15 @@ fun String.prevCodesOn(keyboard: List<String>): List<List<String>> {
 fun part2(input: List<String>): Long {
     val maxDepth = 3
 
+    val cache = HashMap<Pair<String, Int>, Long>()
+
     fun solve(code: String, depth: Int = 0): Long {
         if (depth == maxDepth) return code.length.toLong()
-        return code.prevCodesOn(if (depth == 0) numpad else arrows).sumOf { codes ->
-            codes.minOf { code ->
-                solve(code, depth + 1)
+        return cache.getOrPut(code to depth) {
+            code.prevCodesOn(if (depth == 0) numpad else arrows).sumOf { codes ->
+                codes.minOf { code ->
+                    solve(code, depth + 1)
+                }
             }
         }
     }
