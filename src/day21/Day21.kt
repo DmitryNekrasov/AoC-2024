@@ -169,7 +169,7 @@ fun String.prevCodesOn(keyboard: List<String>): List<List<String>> {
     }
 }
 
-fun part2(input: List<String>): Int {
+fun part2(input: List<String>): Long {
     val maxDepth = 3
 
     fun solve(code: String, depth: Int = 0): Long {
@@ -186,7 +186,9 @@ fun part2(input: List<String>): Int {
         println("Code: $code, result = $result")
     }
 
-    return input.size
+    return input.sumOf { code ->
+        code.substring(0..<code.lastIndex).toLong() * solve(code)
+    }
 }
 
 fun main() {
