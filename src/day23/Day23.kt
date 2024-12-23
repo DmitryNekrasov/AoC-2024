@@ -37,16 +37,16 @@ fun part1(graph: HashMap<String, MutableSet<String>>): Int {
     return triangles.size
 }
 
-fun HashMap<String, MutableSet<String>>.findCliqueByBronKerbosch(r: Set<String> = mutableSetOf(),
+fun HashMap<String, MutableSet<String>>.findCliqueByBronKerbosch(result: MutableList<String>,
+                                                                 r: Set<String> = mutableSetOf(),
                                                                  p: MutableSet<String> = keys.toMutableSet(),
-                                                                 x: MutableSet<String> = mutableSetOf(),
-                                                                 result: MutableList<String> = mutableListOf()) {
+                                                                 x: MutableSet<String> = mutableSetOf()) {
     if (p.isEmpty() && x.isEmpty()) {
         result += r.toList().sorted().joinToString(",")
     } else {
         val pivot = (p union x).maxByOrNull { this[it]?.size ?: 0 } ?: shouldNotReachHere()
         for (v in p - this[pivot]!!) {
-            findCliqueByBronKerbosch(r union setOf(v), (p intersect this[v]!!).toMutableSet(), (x intersect this[v]!!).toMutableSet(), result)
+            findCliqueByBronKerbosch(result, r union setOf(v), (p intersect this[v]!!).toMutableSet(), (x intersect this[v]!!).toMutableSet())
             p.remove(v)
             x.add(v)
         }
@@ -54,7 +54,10 @@ fun HashMap<String, MutableSet<String>>.findCliqueByBronKerbosch(r: Set<String> 
 }
 
 fun part2(graph: HashMap<String, MutableSet<String>>): String {
-    return "^_^"
+    val result = mutableListOf<String>()
+    graph.findCliqueByBronKerbosch(result)
+    result.sortBy { it.length }
+    return result.last()
 }
 
 fun main() {
