@@ -185,11 +185,6 @@ fun part2(input: List<String>): Long {
         }
     }
 
-    for (code in input) {
-        val result = solve(code)
-        println("Code: $code, result = $result")
-    }
-
     return input.sumOf { code ->
         code.substring(0..<code.lastIndex).toLong() * solve(code)
     }
