@@ -79,7 +79,13 @@ fun main() {
 
     run {
         val graph = readInput("Day23").parse().toGraph()
-        part1(graph).println()
-        part2(graph).println()
+        val part1 = part1(graph)
+        val start = System.nanoTime()
+        val part2 = part2(graph)
+        val end = System.nanoTime()
+
+        part1.println()
+        part2.println()
+        println("time = ${(end.toDouble() - start) / 1_000_000} ms")
     }
 }
