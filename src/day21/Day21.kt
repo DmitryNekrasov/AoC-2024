@@ -200,7 +200,13 @@ fun main() {
 
     run {
         val input = readInput("Day21").parse()
-        part1(input).println()
+
+        run {
+            val expected = 184716
+            val actual = part1(input)
+            assertEquals(expected, actual)
+        }
+
         part2(input).println()
     }
 }
