@@ -33,8 +33,8 @@ fun part1(edges: List<Pair<String, String>>): Int {
     return triangles.size
 }
 
-fun part2(edges: List<Pair<String, String>>): Int {
-    return edges.size
+fun part2(edges: List<Pair<String, String>>): String {
+    return "^_^"
 }
 
 fun main() {
@@ -48,7 +48,7 @@ fun main() {
         }
 
         run {
-            val expected = -1
+            val expected = "co,de,ka,ta"
             val actual = part2(edges)
             assertEquals(expected, actual)
         }
