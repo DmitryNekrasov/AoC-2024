@@ -63,6 +63,17 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
                 ?: "") + " -> " + it.value.joinToString(", ") { it + "(" + operators[it] + ")" }
         })
 
+    fun HashMap<String, MutableList<String>>.`all initial bits enter to XOR and AND`(): Boolean {
+        return graph.filter { it.key.startsWith("x") || it.key.startsWith("y") }
+            .map { it.value }
+            .all {
+                it.size == 2 &&
+                        listOf(operators[it.first()]!!, operators[it.last()]!!).sorted() == listOf("AND", "XOR")
+            }
+    }
+
+    println("All initial bits enter to XOR and AND: ${graph.`all initial bits enter to XOR and AND`()}")
+
     return unary.size
 }
 
