@@ -109,6 +109,29 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
     println("All initial bits enter to XOR and AND: ${graph.`all initial bits enter to XOR and AND`()}")
     println("All XORs enter to XOR and AND: ${graph.`all XORs enter to XOR and AND`()}")
 
+    fun checkBit(number: Int, carry: String): String {
+        val x = "x" + if (number <= 9) "0$number" else "$number"
+        val y = "y" + if (number <= 9) "0$number" else "$number"
+
+        val xGates = graph[x]!!.also { if (it.size != 2) println("ERROR! $x doesn't have 2 gates") }
+        val yGates = graph[y]!!.also { if (it.size != 2) println("ERROR! $y doesn't have 2 gates") }
+
+        val (xXOR, xAND) = xGates.partition { operators[it] == "XOR" }.toList().map { it.first() }
+        val (yXOR, yAND) = yGates.partition { operators[it] == "XOR" }.toList().map { it.first() }
+
+        if (xXOR != yXOR) println("ERROR! $x and $y have different XORs")
+        if (xAND != yAND) println("ERROR! $x and $y have different ANDs")
+
+        println("x = $x")
+        println("y = $y")
+
+        return "Q"
+    }
+
+    for (i in 0..42) {
+        checkBit(i, "")
+    }
+
     return unary.size
 }
 
