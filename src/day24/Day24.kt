@@ -29,16 +29,18 @@ class Binary(val lhs: Node, val rhs: Node, val operation: String) : Node {
 }
 
 fun part1(unary: Map<String, Int>, binary: Map<String, List<String>>): Long {
+    val nodes = HashMap<String, Node>()
+
     fun buildNode(name: String): Node {
-        return unary[name]?.let { Unary(it) }
-            ?: binary[name]?.let { Binary(buildNode(it[0]), buildNode(it[2]), it[1]) }
+        return unary[name]?.let { nodes.getOrPut(name) { Unary(it) } }
+            ?: binary[name]?.let { nodes.getOrPut(name) { Binary(buildNode(it[0]), buildNode(it[2]), it[1]) } }
             ?: shouldNotReachHere()
     }
 
-    val nodes = binary.keys.filter { it.startsWith("z") }.map { it to buildNode(it) }
+    val zNodes = binary.keys.filter { it.startsWith("z") }.map { it to buildNode(it) }
         .sortedByDescending { it.first }.map { it.second }
 
-    return nodes.fold(0L) { acc, node -> (acc shl 1) or node.perform().toLong() }
+    return zNodes.fold(0L) { acc, node -> (acc shl 1) or node.perform().toLong() }
 }
 
 fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
