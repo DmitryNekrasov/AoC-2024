@@ -57,22 +57,57 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
         operators[to] = operator
     }
 
-    println(graph.entries.sortedBy { it.key }
-        .joinToString("\n") {
-            it.key + (operators[it.key]?.let { "($it)" }
-                ?: "") + " -> " + it.value.joinToString(", ") { it + "(" + operators[it] + ")" }
-        })
+    fun String.operatorByKey(): String {
+        return operators[this]?.let { "($it)" } ?: ""
+    }
+
+    fun <K, V: List<*>> Map.Entry<K, V>.jts(): String {
+        return key.toString() + (operators[key.toString()]?.let { "($it)" }
+            ?: "") + " -> " + value.joinToString(", ") { it.toString() + "(" + operators[it.toString()] + ")" }
+    }
+
+    println(graph.entries.sortedBy { it.key }.joinToString("\n") { it.jts() })
 
     fun HashMap<String, MutableList<String>>.`all initial bits enter to XOR and AND`(): Boolean {
-        return graph.filter { it.key.startsWith("x") || it.key.startsWith("y") }
-            .map { it.value }
-            .all {
-                it.size == 2 &&
-                        listOf(operators[it.first()]!!, operators[it.last()]!!).sorted() == listOf("AND", "XOR")
+        val values = graph.filter { it.key.startsWith("x") || it.key.startsWith("y") }
+        var result = true
+        for ((key, list) in values) {
+            if (list.size != 2) shouldNotReachHere()
+            val (v1, v2) = list
+            val actual = listOf(operators[v1]!!, operators[v2]!!).sorted()
+            val expected = listOf("AND", "XOR")
+            if (actual != expected) {
+                result = false
+                println("FOR $key${key.operatorByKey()} expected $expected, but was $actual")
             }
+        }
+        return result
+    }
+
+    fun HashMap<String, MutableList<String>>.`all XORs enter to XOR and AND`(): Boolean {
+        val values = graph.filter { (operators[it.key] ?: "") == "XOR" }
+        var result = true
+        for (entry in values) {
+            val (key, list) = entry
+            if (list.size != 2) {
+                result = false
+                println("FOR $key${key.operatorByKey()} expected size=2, but was size=${list.size}")
+                println(entry.jts())
+                continue
+            }
+            val (v1, v2) = list
+            val actual = listOf(operators[v1]!!, operators[v2]!!).sorted()
+            val expected = listOf("AND", "XOR")
+            if (actual != expected) {
+                result = false
+                println("FOR $key${key.operatorByKey()} expected $expected, but was $actual")
+            }
+        }
+        return result
     }
 
     println("All initial bits enter to XOR and AND: ${graph.`all initial bits enter to XOR and AND`()}")
+    println("All XORs enter to XOR and AND: ${graph.`all XORs enter to XOR and AND`()}")
 
     return unary.size
 }
