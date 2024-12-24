@@ -43,7 +43,20 @@ fun part1(unary: Map<String, Int>, binary: Map<String, List<String>>): Long {
     return zNodes.fold(0L) { acc, node -> (acc shl 1) or node.perform().toLong() }
 }
 
+fun HashMap<String, MutableList<String>>.add(from: String, to: String) {
+    getOrPut(from) { mutableListOf() } += to
+}
+
 fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
+    val graph = HashMap<String, MutableList<String>>()
+    for ((to, from) in binary) {
+        val (lhs, _, rhs) = from
+        graph.add(lhs, to)
+        graph.add(rhs, to)
+    }
+
+    println(graph.entries.sortedBy { it.key }.joinToString("\n"))
+
     return unary.size
 }
 
