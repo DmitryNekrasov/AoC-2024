@@ -57,57 +57,57 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
         operators[to] = operator
     }
 
-    fun String.operatorByKey(): String {
-        return operators[this]?.let { "($it)" } ?: ""
-    }
-
-    fun <K, V: List<*>> Map.Entry<K, V>.jts(): String {
-        return key.toString() + (operators[key.toString()]?.let { "($it)" }
-            ?: "") + " -> " + value.joinToString(", ") { it.toString() + "(" + operators[it.toString()] + ")" }
-    }
-
-    println(graph.entries.sortedBy { it.key }.joinToString("\n") { it.jts() })
-
-    fun HashMap<String, MutableList<String>>.`all initial bits enter to XOR and AND`(): Boolean {
-        val values = graph.filter { it.key.startsWith("x") || it.key.startsWith("y") }
-        var result = true
-        for ((key, list) in values) {
-            if (list.size != 2) shouldNotReachHere()
-            val (v1, v2) = list
-            val actual = listOf(operators[v1]!!, operators[v2]!!).sorted()
-            val expected = listOf("AND", "XOR")
-            if (actual != expected) {
-                result = false
-                println("FOR $key${key.operatorByKey()} expected $expected, but was $actual")
-            }
-        }
-        return result
-    }
-
-    fun HashMap<String, MutableList<String>>.`all XORs enter to XOR and AND`(): Boolean {
-        val values = graph.filter { (operators[it.key] ?: "") == "XOR" }
-        var result = true
-        for (entry in values) {
-            val (key, list) = entry
-            if (list.size != 2) {
-                result = false
-                println("FOR $key${key.operatorByKey()} expected size=2, but was size=${list.size}")
-                println(entry.jts())
-                continue
-            }
-            val (v1, v2) = list
-            val actual = listOf(operators[v1]!!, operators[v2]!!).sorted()
-            val expected = listOf("AND", "XOR")
-            if (actual != expected) {
-                result = false
-                println("FOR $key${key.operatorByKey()} expected $expected, but was $actual")
-            }
-        }
-        return result
-    }
-
-    println("All initial bits enter to XOR and AND: ${graph.`all initial bits enter to XOR and AND`()}")
-    println("All XORs enter to XOR and AND: ${graph.`all XORs enter to XOR and AND`()}")
+//    fun String.operatorByKey(): String {
+//        return operators[this]?.let { "($it)" } ?: ""
+//    }
+//
+//    fun <K, V : List<*>> Map.Entry<K, V>.jts(): String {
+//        return key.toString() + (operators[key.toString()]?.let { "($it)" }
+//            ?: "") + " -> " + value.joinToString(", ") { it.toString() + "(" + operators[it.toString()] + ")" }
+//    }
+//
+//    println(graph.entries.sortedBy { it.key }.joinToString("\n") { it.jts() })
+//
+//    fun HashMap<String, MutableList<String>>.`all initial bits enter to XOR and AND`(): Boolean {
+//        val values = graph.filter { it.key.startsWith("x") || it.key.startsWith("y") }
+//        var result = true
+//        for ((key, list) in values) {
+//            if (list.size != 2) shouldNotReachHere()
+//            val (v1, v2) = list
+//            val actual = listOf(operators[v1]!!, operators[v2]!!).sorted()
+//            val expected = listOf("AND", "XOR")
+//            if (actual != expected) {
+//                result = false
+//                println("FOR $key${key.operatorByKey()} expected $expected, but was $actual")
+//            }
+//        }
+//        return result
+//    }
+//
+//    fun HashMap<String, MutableList<String>>.`all XORs enter to XOR and AND`(): Boolean {
+//        val values = graph.filter { (operators[it.key] ?: "") == "XOR" }
+//        var result = true
+//        for (entry in values) {
+//            val (key, list) = entry
+//            if (list.size != 2) {
+//                result = false
+//                println("FOR $key${key.operatorByKey()} expected size=2, but was size=${list.size}")
+//                println(entry.jts())
+//                continue
+//            }
+//            val (v1, v2) = list
+//            val actual = listOf(operators[v1]!!, operators[v2]!!).sorted()
+//            val expected = listOf("AND", "XOR")
+//            if (actual != expected) {
+//                result = false
+//                println("FOR $key${key.operatorByKey()} expected $expected, but was $actual")
+//            }
+//        }
+//        return result
+//    }
+//
+//    println("All initial bits enter to XOR and AND: ${graph.`all initial bits enter to XOR and AND`()}")
+//    println("All XORs enter to XOR and AND: ${graph.`all XORs enter to XOR and AND`()}")
 
     fun checkBit(number: Int, carry: String): String {
         val x = "x" + if (number <= 9) "0$number" else "$number"
@@ -122,14 +122,60 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
         if (xXOR != yXOR) println("ERROR! $x and $y have different XORs")
         if (xAND != yAND) println("ERROR! $x and $y have different ANDs")
 
+        val firstXor = xXOR
+        val firstAnd = xAND
+
+        val firstXorGates =
+            graph[firstXor]!!.also { if (it.size != 2) println("ERROR! $firstXor doesn't have 2 gates") }
+        val carryGates = graph[carry]!!.also { if (it.size != 2) println("Error! $carry doesn't have 2 gates") }
+
+        if (firstXorGates.size != 2 && carryGates.size != 2) {
+            println("I don't know what to do")
+        }
+
+        val (firstXorXor, firstXorAnd) = if (firstXorGates.size == 2) firstXorGates.partition { operators[it] == "XOR" }
+            .toList().map { it.first() } else listOf("Invalid", "Invalid")
+        val (carryXor, carryEnd) = if (carryGates.size == 2) carryGates.partition { operators[it] == "XOR" }
+            .toList().map { it.first() } else listOf("Invalid", "Invalid")
+
+        if (firstXorXor != carryXor) println("ERROR! $firstXor and $carry have different XORs")
+        if (firstXorAnd != carryEnd) println("ERROR! $firstXor and $carry have different ANDs")
+
+        val secondXor: String
+        val secondAnd: String
+        if (firstXorGates.map { operators[it]!! }.sorted() == listOf("AND", "XOR")) {
+            secondXor = firstXorXor
+            secondAnd = firstXorAnd
+        } else {
+            secondXor = carryXor
+            secondAnd = carryEnd
+        }
+
+        val firstAndGates = graph[firstAnd]!!
+        val secondAndGates = graph[secondAnd]!!
+
+        if (firstAndGates.size != 1) {
+            println("Error! $firstAnd doesn't have 1 gates")
+        }
+        if (secondAndGates.size != 1) {
+            println("Error! $secondAnd doesn't have 1 gates")
+        }
+
+        val firstAndOr = firstAndGates.first()
+        val secondAndOr = secondAndGates.first()
+        if (firstAndOr != secondAndOr) {
+            println("Error! Different OR! for $firstAnd and $secondAnd")
+        }
+
         println("x = $x")
         println("y = $y")
 
-        return "Q"
+        return firstAndOr
     }
 
-    for (i in 0..42) {
-        checkBit(i, "")
+    var carry = "rvh"
+    for (bit in 1..40) {
+        carry = checkBit(bit, carry)
     }
 
     return unary.size
