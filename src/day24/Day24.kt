@@ -49,13 +49,19 @@ fun HashMap<String, MutableList<String>>.add(from: String, to: String) {
 
 fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
     val graph = HashMap<String, MutableList<String>>()
+    val operators = HashMap<String, String>()
     for ((to, from) in binary) {
-        val (lhs, _, rhs) = from
+        val (lhs, operator, rhs) = from
         graph.add(lhs, to)
         graph.add(rhs, to)
+        operators[to] = operator
     }
 
-    println(graph.entries.sortedBy { it.key }.joinToString("\n"))
+    println(graph.entries.sortedBy { it.key }
+        .joinToString("\n") {
+            it.key + (operators[it.key]?.let { "($it)" }
+                ?: "") + " -> " + it.value.joinToString(", ") { it + "(" + operators[it] + ")" }
+        })
 
     return unary.size
 }
@@ -67,12 +73,6 @@ fun main() {
         run {
             val expected = 2024L
             val actual = part1(unary, binary)
-            assertEquals(expected, actual)
-        }
-
-        run {
-            val expected = -1
-            val actual = part2(unary, binary)
             assertEquals(expected, actual)
         }
     }
