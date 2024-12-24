@@ -47,7 +47,7 @@ fun HashMap<String, MutableList<String>>.add(from: String, to: String) {
     getOrPut(from) { mutableListOf() } += to
 }
 
-fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
+fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): String {
     val graph = HashMap<String, MutableList<String>>()
     val operators = HashMap<String, String>()
     for ((to, from) in binary) {
@@ -109,6 +109,8 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
 //    println("All initial bits enter to XOR and AND: ${graph.`all initial bits enter to XOR and AND`()}")
 //    println("All XORs enter to XOR and AND: ${graph.`all XORs enter to XOR and AND`()}")
 
+    val report = mutableListOf<String>("knt", "z15")
+
     fun checkBit(number: Int, carry: String): String {
         val x = "x" + if (number <= 9) "0$number" else "$number"
         val y = "y" + if (number <= 9) "0$number" else "$number"
@@ -127,19 +129,28 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
 
         val firstXorGates =
             graph[firstXor]!!.also { if (it.size != 2) println("ERROR! $firstXor doesn't have 2 gates") }
-        val carryGates = graph[carry]!!.also { if (it.size != 2) println("Error! $carry doesn't have 2 gates") }
+        val carryGates = graph[carry]?.also { if (it.size != 2) println("Error! $carry doesn't have 2 gates") } ?: listOf("Invalid")
 
         if (firstXorGates.size != 2 && carryGates.size != 2) {
             println("I don't know what to do")
         }
 
+        if (firstXorGates.size == 1) {
+            println("REPORT: ($firstXor - ${firstXorGates.first()})")
+            report += firstXorGates.first()
+        }
+        if (carryGates.size == 1) {
+            println("REPORT: ($carry - ${carryGates.first()})")
+            report += carryGates.first()
+        }
+
         val (firstXorXor, firstXorAnd) = if (firstXorGates.size == 2) firstXorGates.partition { operators[it] == "XOR" }
             .toList().map { it.first() } else listOf("Invalid", "Invalid")
-        val (carryXor, carryEnd) = if (carryGates.size == 2) carryGates.partition { operators[it] == "XOR" }
-            .toList().map { it.first() } else listOf("Invalid", "Invalid")
+        val (carryXor, carryAnd) = if (carryGates.size == 2) carryGates.partition { operators[it] == "XOR" }
+            .toList().map { it.first() } else listOf("InvalidCarry", "InvalidCarry")
 
         if (firstXorXor != carryXor) println("ERROR! $firstXor and $carry have different XORs")
-        if (firstXorAnd != carryEnd) println("ERROR! $firstXor and $carry have different ANDs")
+        if (firstXorAnd != carryAnd) println("ERROR! $firstXor and $carry have different ANDs")
 
         val secondXor: String
         val secondAnd: String
@@ -148,11 +159,25 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
             secondAnd = firstXorAnd
         } else {
             secondXor = carryXor
-            secondAnd = carryEnd
+            secondAnd = carryAnd
         }
 
-        val firstAndGates = graph[firstAnd]!!
-        val secondAndGates = graph[secondAnd]!!
+        if (!secondXor.startsWith("z")) {
+            println("REPORT: ($firstXor - $secondXor)")
+            report += secondXor
+        }
+        if (secondAnd.startsWith("z")) {
+            println("REPORT: ($carry - $secondAnd)")
+        }
+
+        val firstAndGates = graph[firstAnd] ?: listOf("Invalid")
+        val secondAndGates = graph[secondAnd] ?: listOf("Invalid")
+
+        val firstAndOr = if (firstAndGates.size == 1) firstAndGates.first() else firstXorGates.first()
+        val secondAndOr = secondAndGates.first()
+        if (firstAndOr != secondAndOr) {
+            println("Error! Different OR! for $firstAnd and $secondAnd")
+        }
 
         if (firstAndGates.size != 1) {
             println("Error! $firstAnd doesn't have 1 gates")
@@ -161,24 +186,26 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
             println("Error! $secondAnd doesn't have 1 gates")
         }
 
-        val firstAndOr = firstAndGates.first()
-        val secondAndOr = secondAndGates.first()
-        if (firstAndOr != secondAndOr) {
-            println("Error! Different OR! for $firstAnd and $secondAnd")
-        }
-
         println("x = $x")
         println("y = $y")
 
-        return firstAndOr
+        return (if (firstAndOr != "Invalid") firstAndOr else secondAndOr).let {
+            if (it.startsWith("z")) {
+                println("REPORT! $it")
+                report += it
+                firstXorXor
+            } else {
+                it
+            }
+        }
     }
 
     var carry = "rvh"
-    for (bit in 1..40) {
+    for (bit in 1..44) {
         carry = checkBit(bit, carry)
     }
 
-    return unary.size
+    return report.sorted().joinToString(",")
 }
 
 fun main() {
