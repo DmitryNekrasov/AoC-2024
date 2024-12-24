@@ -35,10 +35,10 @@ fun part1(unary: Map<String, Int>, binary: Map<String, List<String>>): Long {
             ?: shouldNotReachHere()
     }
 
-    val nodes = binary.filter { (name, _) -> name.startsWith("z") }.map { (name, _) -> name to buildNode(name) }
-        .sortedByDescending { it.first }
+    val nodes = binary.keys.filter { it.startsWith("z") }.map { it to buildNode(it) }
+        .sortedByDescending { it.first }.map { it.second }
 
-    return nodes.fold(0L) { acc, node -> (acc shl 1) or node.second.perform().toLong() }
+    return nodes.fold(0L) { acc, node -> (acc shl 1) or node.perform().toLong() }
 }
 
 fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
