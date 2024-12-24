@@ -28,11 +28,17 @@ class Binary(val lhs: Node, val rhs: Node, val operation: String) : Node {
     }
 }
 
-fun part1(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
-    unary.entries.joinToString("\n").println()
-    binary.entries.joinToString("\n").println()
+fun part1(unary: Map<String, Int>, binary: Map<String, List<String>>): Long {
+    fun buildNode(name: String): Node {
+        return unary[name]?.let { Unary(it) }
+            ?: binary[name]?.let { Binary(buildNode(it[0]), buildNode(it[2]), it[1]) }
+            ?: shouldNotReachHere()
+    }
 
-    return unary.size
+    val nodes = binary.filter { (name, _) -> name.startsWith("z") }.map { (name, _) -> name to buildNode(name) }
+        .sortedByDescending { it.first }
+
+    return nodes.fold(0L) { acc, node -> (acc shl 1) or node.second.perform().toLong() }
 }
 
 fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): Int {
@@ -44,7 +50,7 @@ fun main() {
         val (unary, binary) = readInput("Day24_test01").parse()
 
         run {
-            val expected = 2024
+            val expected = 2024L
             val actual = part1(unary, binary)
             assertEquals(expected, actual)
         }
