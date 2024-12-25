@@ -17,10 +17,37 @@ fun List<String>.parse(): List<List<String>> {
     return result
 }
 
-fun part1(input: List<List<String>>): Int {
-    input.joinToString("\n").println()
+fun List<String>.toHeights(): IntArray {
+    val n = size
+    val m = first().length
+    val result = IntArray(m) { 0 }
+    for (i in 0..<n) {
+        for (j in 0..<m) {
+            if (this[i][j] == '#') {
+                result[j] += 1
+            }
+        }
+    }
+    return result
+}
 
-    return input.size
+infix fun IntArray.isCompatibleWith(o: IntArray) = zip(o).all { (h1, h2) -> h1 + h2 <= 7 }
+
+fun part1(input: List<List<String>>): Int {
+    val (locks, keys) = input.partition { it.first().startsWith('#') }.let { (locks, keys) ->
+        locks.map { it.toHeights() } to  keys.map { it.toHeights() }
+    }
+
+    var result = 0
+    for (lock in locks) {
+        for (key in keys) {
+            if (lock isCompatibleWith key) {
+                result++
+            }
+        }
+    }
+
+    return result
 }
 
 fun part2(input: List<List<String>>): Int {
@@ -32,7 +59,7 @@ fun main() {
         val input = readInput("Day25_test01").parse()
 
         run {
-            val expected = -1
+            val expected = 3
             val actual = part1(input)
             assertEquals(expected, actual)
         }
