@@ -35,7 +35,7 @@ infix fun IntArray.isCompatibleWith(o: IntArray) = zip(o).all { (h1, h2) -> h1 +
 
 fun part1(input: List<List<String>>): Int {
     val (locks, keys) = input.partition { it.first().startsWith('#') }.let { (locks, keys) ->
-        locks.map { it.toHeights() } to  keys.map { it.toHeights() }
+        locks.map { it.toHeights() } to keys.map { it.toHeights() }
     }
 
     var result = 0
