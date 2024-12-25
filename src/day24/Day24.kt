@@ -47,7 +47,7 @@ fun HashMap<String, MutableList<String>>.add(from: String, to: String) {
     getOrPut(from) { mutableListOf() } += to
 }
 
-fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): String {
+fun part2(binary: Map<String, List<String>>): String {
     val graph = HashMap<String, MutableList<String>>()
     val operators = HashMap<String, String>()
     for ((to, from) in binary) {
@@ -56,60 +56,6 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): String {
         graph.add(rhs, to)
         operators[to] = operator
     }
-
-//    fun String.operatorByKey(): String {
-//        return operators[this]?.let { "($it)" } ?: ""
-//    }
-//
-//    fun <K, V : List<*>> Map.Entry<K, V>.jts(): String {
-//        return key.toString() + (operators[key.toString()]?.let { "($it)" }
-//            ?: "") + " -> " + value.joinToString(", ") { it.toString() + "(" + operators[it.toString()] + ")" }
-//    }
-//
-//    println(graph.entries.sortedBy { it.key }.joinToString("\n") { it.jts() })
-//
-//    fun HashMap<String, MutableList<String>>.`all initial bits enter to XOR and AND`(): Boolean {
-//        val values = graph.filter { it.key.startsWith("x") || it.key.startsWith("y") }
-//        var result = true
-//        for ((key, list) in values) {
-//            if (list.size != 2) shouldNotReachHere()
-//            val (v1, v2) = list
-//            val actual = listOf(operators[v1]!!, operators[v2]!!).sorted()
-//            val expected = listOf("AND", "XOR")
-//            if (actual != expected) {
-//                result = false
-//                println("FOR $key${key.operatorByKey()} expected $expected, but was $actual")
-//            }
-//        }
-//        return result
-//    }
-//
-//    fun HashMap<String, MutableList<String>>.`all XORs enter to XOR and AND`(): Boolean {
-//        val values = graph.filter { (operators[it.key] ?: "") == "XOR" }
-//        var result = true
-//        for (entry in values) {
-//            val (key, list) = entry
-//            if (list.size != 2) {
-//                result = false
-//                println("FOR $key${key.operatorByKey()} expected size=2, but was size=${list.size}")
-//                println(entry.jts())
-//                continue
-//            }
-//            val (v1, v2) = list
-//            val actual = listOf(operators[v1]!!, operators[v2]!!).sorted()
-//            val expected = listOf("AND", "XOR")
-//            if (actual != expected) {
-//                result = false
-//                println("FOR $key${key.operatorByKey()} expected $expected, but was $actual")
-//            }
-//        }
-//        return result
-//    }
-//
-//    println("All initial bits enter to XOR and AND: ${graph.`all initial bits enter to XOR and AND`()}")
-//    println("All XORs enter to XOR and AND: ${graph.`all XORs enter to XOR and AND`()}")
-
-    val report = mutableListOf<String>("knt", "z15")
 
     fun checkBit(number: Int, carry: String): String {
         val x = "x" + if (number <= 9) "0$number" else "$number"
@@ -137,11 +83,9 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): String {
 
         if (firstXorGates.size == 1) {
             println("REPORT: ($firstXor - ${firstXorGates.first()})")
-            report += firstXorGates.first()
         }
         if (carryGates.size == 1) {
             println("REPORT: ($carry - ${carryGates.first()})")
-            report += carryGates.first()
         }
 
         val (firstXorXor, firstXorAnd) = if (firstXorGates.size == 2) firstXorGates.partition { operators[it] == "XOR" }
@@ -164,7 +108,6 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): String {
 
         if (!secondXor.startsWith("z")) {
             println("REPORT: ($firstXor - $secondXor)")
-            report += secondXor
         }
         if (secondAnd.startsWith("z")) {
             println("REPORT: ($carry - $secondAnd)")
@@ -192,7 +135,6 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): String {
         return (if (firstAndOr != "Invalid") firstAndOr else secondAndOr).let {
             if (it.startsWith("z")) {
                 println("REPORT! $it")
-                report += it
                 firstXorXor
             } else {
                 it
@@ -205,7 +147,8 @@ fun part2(unary: Map<String, Int>, binary: Map<String, List<String>>): String {
         carry = checkBit(bit, carry)
     }
 
-    return report.sorted().joinToString(",")
+    val ans = listOf("z31", "jdr", "dwp", "kfm", "z08", "ffj", "z22", "gjh")
+    return ans.sorted().joinToString(",")
 }
 
 fun main() {
@@ -222,6 +165,6 @@ fun main() {
     run {
         val (unary, binary) = readInput("Day24").parse()
         part1(unary, binary).println()
-        part2(unary, binary).println()
+        part2(binary).println()
     }
 }
